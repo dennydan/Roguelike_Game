@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float maxSpeed = 100f;
+    [SerializeField] float maxSpeed = 1f;
     [SerializeField] float jumpForce = 100f;
     [SerializeField] LayerMask Ground_Layer;
     [SerializeField] string groundCheckName = "GroundCheck";
@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     void Character_Action()
     {
         // 左右移動  
+        Debug.Log(Input.GetAxisRaw("Horizontal") * speedFactor);
         Move(Input.GetAxisRaw("Horizontal") * speedFactor, false, bJump);
         bJump = false;
     }
@@ -60,7 +61,7 @@ public class PlayerController : MonoBehaviour
         //Moving, 接動畫(左右移動)
         if (isGrounded)
         {
-
+            //Mathf.Abs(moveSpeed)
             characterAnim.SetFloat("Speed", Mathf.Abs(moveSpeed));
             characterRigidBody.velocity = new Vector2(moveSpeed * maxSpeed, characterRigidBody.velocity.y);
 
