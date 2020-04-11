@@ -7,17 +7,20 @@ public class Monster_walk : StateMachineBehaviour
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] float attackRange = 1f;
 
-    Transform player;
-    Rigidbody2D rigidbody;
-    Monster monster;
+    Transform m_player;
+    Rigidbody2D m_rigidbody;
+    Monster m_monster;
+    Weapon m_weapon;
+    PlayerCharacter m_playerCharacter;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        rigidbody = animator.GetComponent<Rigidbody2D>();
-        monster = animator.GetComponent<Monster>();
-        
+        m_player = GameObject.FindGameObjectWithTag("Player").transform;
+        m_rigidbody = animator.GetComponent<Rigidbody2D>();
+        m_monster = animator.GetComponent<Monster>();
+        m_playerCharacter = m_player.GetComponent<PlayerCharacter>();
+        m_weapon = animator.GetComponent<Weapon>();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -26,13 +29,14 @@ public class Monster_walk : StateMachineBehaviour
         if (Can_Attack())
         {
             animator.SetTrigger("Attack");
+            m_weapon.TakeDemage(m_playerCharacter);
             return;
         }
 
-        Vector2 target = new Vector2(player.position.x, rigidbody.position.y);
-        Vector2 newPosition = Vector2.MoveTowards(rigidbody.position, target, moveSpeed * Time.fixedDeltaTime);
-        rigidbody.MovePosition(newPosition);
-        monster.LookAt_Player(player);
+        Vector2 target = new Vector2(m_player.position.x, m_rigidbody.position.y);
+        Vector2 newPosition = Vector2.MoveTowards(m_rigidbody.position, target, moveSpeed * Time.fixedDeltaTime);
+        m_rigidbody.MovePosition(newPosition);
+        m_monster.LookAt_Player(m_player);
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
@@ -43,6 +47,6 @@ public class Monster_walk : StateMachineBehaviour
 
     bool Can_Attack()
     {
-        return Mathf.Abs(rigidbody.position.x - player.position.x) < attackRange;
+        return Mathf.Abs(m_rigidbody.position.x - m_player.position.x) < attackRange;
     }
 }

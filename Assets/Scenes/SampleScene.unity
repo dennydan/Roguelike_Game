@@ -219,6 +219,7 @@ GameObject:
   - component: {fileID: 714978754}
   - component: {fileID: 714978753}
   - component: {fileID: 714978756}
+  - component: {fileID: 714978757}
   m_Layer: 10
   m_Name: Boss_MrClock
   m_TagString: Untagged
@@ -384,6 +385,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 007958768d0eff04f82c1636cf8f6319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_health: 0
+--- !u!114 &714978757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714978749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c2f8ba06464a043bdf0b4216564ab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_demage: 2
 --- !u!1 &913770505
 GameObject:
   m_ObjectHideFlags: 0

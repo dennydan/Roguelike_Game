@@ -1,29 +1,31 @@
 ﻿using UnityEngine;
 
-interface IDemagable
+public interface IDemagable
 {
-    void Demage();
+    void Demage(float demage);
 }
 
 
 
 public class Weapon : MonoBehaviour
 {
+    [SerializeField] float m_demage = 2;
     Monster m_monster;
     void Start()
     {
 
     }
     
-    void TakeDemage(IDemagable demagable)
+    public void TakeDemage(IDemagable demagable)
     {
-        demagable.Demage();
+        demagable.Demage(m_demage);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         Monster m_monster = other.GetComponent<Monster>();
-        if(m_monster)
+        PlayerCharacter player = other.GetComponent<PlayerCharacter>();
+        if (m_monster)
             TakeDemage(m_monster);
     }
 }

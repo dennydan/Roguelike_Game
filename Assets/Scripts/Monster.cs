@@ -12,11 +12,11 @@ public class Monster : MonoBehaviour, IDemagable
         m_health = m_maxHealth;
     }
 
-    void IDemagable.Demage()
+    void IDemagable.Demage(float demage)
     {
         if (m_health > 0)
         {
-            m_health--;
+            m_health -= demage;
             Debug.Log("Health :　" + m_health);
         }
     }
