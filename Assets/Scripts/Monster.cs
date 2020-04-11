@@ -1,10 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Monster : MonoBehaviour, IDemagable
 {
     bool isFacingRight = false;
+    [SerializeField]
+    float m_health;
+    float m_maxHealth = 5;
+
+    private void Awake()
+    {
+        m_health = m_maxHealth;
+    }
+
+    void IDemagable.Demage()
+    {
+        if (m_health > 0)
+        {
+            m_health--;
+            Debug.Log("Health :　" + m_health);
+        }
+    }
 
     public void LookAt_Player(Transform player)
     {
