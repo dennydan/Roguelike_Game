@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
 
+/*
+ * 已知BUG:
+ *  1.踩到敵人算落地 可跳敵人(你馬力歐?)
+ *  2.撞牆算落地 (延伸問題:斜牆可爬?)
+ * */
+
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float maxSpeed = 1f;
@@ -71,7 +78,7 @@ public class PlayerController : MonoBehaviour
         //}
 
         //Jump, 接動畫(跳躍)
-        if (jump)
+        if (isGrounded && jump)
         {
             isGrounded = false;
             characterAnim.SetBool("Ground", isGrounded);
@@ -83,7 +90,7 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = false;
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, k_GroundRadius, Ground_Layer);    //TODO:撞牆不能算落地
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, k_GroundRadius, Ground_Layer);    //TODO:撞牆不能算落地; 踩到敵人算落地 可跳敵人(你馬力歐?)
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].gameObject != gameObject)
