@@ -59,14 +59,16 @@ public class PlayerController : MonoBehaviour
         //Moving, 接動畫(左右移動)
         if (isGrounded)
         {
-            //Mathf.Abs(moveSpeed)
-            characterAnim.SetFloat("Speed", Mathf.Abs(moveSpeed));
-            characterRigidBody.velocity = new Vector2(moveSpeed * maxSpeed, characterRigidBody.velocity.y);
-
             if (moveSpeed > 0 && !bFacingRight)
                 Flip();
             else if (moveSpeed < 0 && bFacingRight)
                 Flip();
+            characterRigidBody.velocity = new Vector2(moveSpeed * maxSpeed, characterRigidBody.velocity.y);
+
+            moveSpeed = Mathf.Abs(moveSpeed);
+            characterAnim.SetFloat("Speed", moveSpeed);
+            characterAnim.SetBool("FacingRight", bFacingRight);
+
         }
 
         //Jump, 接動畫(跳躍)

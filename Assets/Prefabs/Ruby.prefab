@@ -109,8 +109,8 @@ GameObject:
   - component: {fileID: 6256807773752105263}
   - component: {fileID: 2495857176654561811}
   m_Layer: 9
-  m_Name: RubyIdleDown1
-  m_TagString: Untagged
+  m_Name: Ruby
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -292,6 +292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06398ca975c2be044bfdc4d3d4ea413b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_health: 0
+  m_maxHealth: 5
 --- !u!114 &6256807773752105263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,11 +318,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a35bbcd778af548988ff836da35804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 100
+  maxSpeed: 150
   jumpForce: 120
   Ground_Layer:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 1335
   groundCheckName: GroundCheck
   ceilingCheckName: CeilingCheck
   centerOfMass: {fileID: 2495857175081144778}
