@@ -46,7 +46,6 @@ public class PlayerController : MonoBehaviour
     void Character_Action()
     {
         // 左右移動  
-        Debug.Log(Input.GetAxisRaw("Horizontal") * speedFactor);
         Move(Input.GetAxisRaw("Horizontal") * speedFactor, false, bJump);
         bJump = false;
     }
@@ -57,8 +56,8 @@ public class PlayerController : MonoBehaviour
         //..
 
         //Moving, 接動畫(左右移動)
-        if (isGrounded)
-        {
+        //if (isGrounded)
+        //{
             if (moveSpeed > 0 && !bFacingRight)
                 Flip();
             else if (moveSpeed < 0 && bFacingRight)
@@ -69,10 +68,10 @@ public class PlayerController : MonoBehaviour
             characterAnim.SetFloat("Speed", moveSpeed);
             characterAnim.SetBool("FacingRight", bFacingRight);
 
-        }
+        //}
 
         //Jump, 接動畫(跳躍)
-        if (isGrounded && jump)
+        if (jump)
         {
             isGrounded = false;
             characterAnim.SetBool("Ground", isGrounded);
@@ -84,7 +83,7 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = false;
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, k_GroundRadius, Ground_Layer);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, k_GroundRadius, Ground_Layer);    //TODO:撞牆不能算落地
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].gameObject != gameObject)
