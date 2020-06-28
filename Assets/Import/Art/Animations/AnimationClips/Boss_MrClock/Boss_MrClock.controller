@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e55213c242f9dbe48847d9f4b7646ecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2.5
+  moveSpeed: 1
   attackRange: 1
 --- !u!1101 &-7008805050196615783
 AnimatorStateTransition:
@@ -103,7 +103,7 @@ AnimatorController:
   m_Name: Boss_MrClock
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Attack
+  - m_Name: NPCAttack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -180,7 +180,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Attack
+    m_ConditionEvent: NPCAttack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5218063596588065667}

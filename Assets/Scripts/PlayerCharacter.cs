@@ -2,26 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCharacter : MonoBehaviour, IDemagable
+
+namespace RoguelikeGame
 {
-    [SerializeField] float m_health, m_maxHealth = 5;
-
-    private void Awake()
+    public class PlayerCharacter : MonoBehaviour, IDemagable
     {
-        m_health = m_maxHealth;
-    }
+        [SerializeField] float m_maxHealth = 5;
+        float m_health;
+        float m_healthFactor = 1;
+        int CharacterLevel = 1;
+        StateMachine FSM;
+        public StateMachine  PlayerState { set { FSM = value; } get { return FSM; } }
 
-    private void Update()
-    {
-        Debug.Log(m_health);
-    }
-
-    void IDemagable.Demage(float demage)
-    {
-        if (m_health > 0)
+        private void Awake()
         {
-            m_health -= demage;
-            Debug.Log("Health :　" + m_health);
+            m_health = m_maxHealth * (CharacterLevel * m_healthFactor + 1);
+        }
+
+        private void Update()
+        {
+            Debug.Log(m_health);
+        }
+
+        public bool IsDead()
+        {
+            return m_health <= 0;
+        }
+
+        void IDemagable.Demage(float demage)
+        {
+            if (!IsDead())
+            {
+                m_health -= demage;
+                Debug.Log("Health :　" + m_health);
+            }
         }
     }
 }
