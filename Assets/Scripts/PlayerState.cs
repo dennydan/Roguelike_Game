@@ -54,7 +54,10 @@ namespace RoguelikeGame
                         }
                         break;
                     }
-                case(int)GSDefine.PlayerState.JUMP:
+                case (int)GSDefine.PlayerState.DODGE:
+                    // 暫不知道怎麼用
+                    break;
+                case (int)GSDefine.PlayerState.JUMP:
                     // 暫不使用 
                     break;
                 case (int)GSDefine.PlayerState.DIE:
