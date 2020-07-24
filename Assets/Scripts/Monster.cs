@@ -27,11 +27,10 @@ namespace RoguelikeGame
 
         void IDemagable.Demage(float demage)
         {
-            if (!IsDead())
+            if (IsDead() == false)
             {
-                Debug.Log("M Demage" + demage);
+                //Debug.Log("M Demage" + demage);
                 m_health -= demage;
-                Debug.Log("Monster Health :　" + m_health);
             }
         }
 
@@ -49,7 +48,8 @@ namespace RoguelikeGame
 
         public bool IsDead()
         {
-            return m_health <= 0;
+            //Debug.Log("Monster Health" + m_health);
+            return m_health <= 0.0f;
         }
 
         void Filp()

@@ -22,7 +22,7 @@ namespace RoguelikeGame
 
         private void Update()
         {
-            Debug.Log(m_health);
+            //Debug.Log(m_health);
         }
 
         public bool IsDead()
@@ -35,13 +35,13 @@ namespace RoguelikeGame
             if (!IsDead())
             {
                 m_health -= demage;
-                Debug.Log("Health :　" + m_health);
+                //Debug.Log("Health :　" + m_health);
             }
         }
 
         public float GetMaxSpeed()
         {
-            Debug.Log("Speed" + m_maxSpeed);
+            //Debug.Log("Speed" + m_maxSpeed);
             return m_maxSpeed;
         }
 

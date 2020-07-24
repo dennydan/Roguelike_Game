@@ -41,7 +41,7 @@ namespace RoguelikeGame
             else if (Can_Attack())
             {
                 animator.SetTrigger("NPCAttack");
-                m_weapon.TakeDemage(m_playerCharacter);
+                m_weapon.Attack((int)AttackType.MONSTER, 1.0f, 1.0f);
                 return;
             }
             Vector2 target = new Vector2(m_player.position.x, m_rigidbody.position.y);
@@ -60,7 +60,7 @@ namespace RoguelikeGame
         void IdleWalk()
         {
             //  腳色死亡後隨機亂走 for test 
-            Debug.Log("Die");
+            //Debug.Log("Die");
             Vector2 target_ = new Vector2(Random.Range(-5, 5), m_rigidbody.position.y);
             Vector2 newPosition_ = Vector2.MoveTowards(m_rigidbody.position, target_, moveSpeed * Time.fixedDeltaTime);
             m_rigidbody.MovePosition(newPosition_);

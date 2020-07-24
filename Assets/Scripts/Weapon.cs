@@ -10,53 +10,63 @@ public interface IDemagable
 
 namespace RoguelikeGame
 {
+    enum AttackType
+    {
+        PLAYER = 1,
+        MONSTER
+    }
+
     public class Weapon : MonoBehaviour
     {
         [SerializeField] float m_demage = 2;
         [SerializeField] float m_demageRange = 1.0f;
-
-        int m_attackCount = 0;
-
+        [SerializeField] LayerMask mask;
         Monster m_monster;
-        void Start()
-        {
-          
-        }
 
-        public void TakeDemage(IDemagable demagable)
+
+        public void Attack(int type, float demageFactor, float rangeFactor)
         {
-            switch(m_attackCount)
+            bool isAttacked = true;
+            // 玩家攻擊
+            if(type == (int)AttackType.PLAYER)
             {
-                case 0:
-                    // add Delay
-                    StartCoroutine(AttackCounter());
-                    demagable.Demage(m_demage);
-                    break;
-                case 1:
-                    demagable.Demage(m_demage*1.2f);
-                    break;
-                case 2:
-                    demagable.Demage(m_demage*2);
-                    break;
-
-                default:
-                    break;
+                Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, m_demageRange * rangeFactor, LayerMask.GetMask("Monster"));
+                foreach (Collider2D hit in hits)
+                {
+                    // Debug.Log("PLAYER");
+                    Monster npc = hit.GetComponent<Monster>();
+                    if (isAttacked && npc)
+                    {
+                        isAttacked = false;
+                        TakeDemage(npc, demageFactor);
+                    }
+                }
             }
+            // 怪物攻擊
+            else if(type == (int)AttackType.MONSTER)
+            {
+                Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, m_demageRange * rangeFactor, LayerMask.GetMask("Player"));
+                foreach (Collider2D hit in hits)
+                {
+                    PlayerCharacter pc = hit.GetComponent<PlayerCharacter>();
+                    if (isAttacked && pc)
+                    {
+                        isAttacked = false;
+                        TakeDemage(pc, demageFactor);
+                    }
+                }
+            }
+            
+        }
+        public void TakeDemage(IDemagable demagable, float demageFactor)
+        {
+            Debug.Log("Demage : " + demageFactor.ToString());
+            demagable.Demage(m_demage * demageFactor);
         }
 
-        IEnumerator AttackCounter()
+        private void OnDrawGizmosSelected()
         {
-            m_attackCount++;
-            yield return new WaitForSeconds(1.0f);
-            m_attackCount = 0;
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            Monster m_monster = other.GetComponent<Monster>();
-            PlayerCharacter pc = other.GetComponent<PlayerCharacter>();
-            if (m_monster)
-                TakeDemage(m_monster);
+            Gizmos.DrawWireSphere(transform.position, m_demageRange * 1.0f);
         }
     }
 }
