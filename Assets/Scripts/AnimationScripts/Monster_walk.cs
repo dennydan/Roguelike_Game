@@ -29,15 +29,17 @@ namespace RoguelikeGame
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if(m_monster.IsDead())
+            if(m_monster.IsDead() || m_player == null)
             {
                 return;
             }
+            /*  
             if (m_playerCharacter.IsDead())
             {
                 IdleWalk();
                 return;
             }
+            */
             else if (Can_Attack())
             {
                 animator.SetTrigger("NPCAttack");
@@ -69,7 +71,8 @@ namespace RoguelikeGame
 
         bool Can_Attack()
         {
-            return Mathf.Abs(m_rigidbody.position.x - m_player.position.x) < attackRange;
+            return m_rigidbody && m_player && 
+                Mathf.Abs(m_rigidbody.position.x - m_player.position.x) < attackRange;
         }
     }
 }

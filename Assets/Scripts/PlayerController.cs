@@ -32,7 +32,7 @@ namespace RoguelikeGame
         [SerializeField] float dodgeCD = 1f;
         [SerializeField] float dodgeDuration = 0.3f;
 
-        PlayerCharacter m_pCharacter;
+        PlayerCharacter m_pc;
         Transform m_groundCheck;                      //地面檢查
         const float k_GroundRadius = 0.2f;
         bool m_isGrounded;
@@ -54,7 +54,7 @@ namespace RoguelikeGame
             m_characterAnim = GetComponent<Animator>();
             characterRigidBody = GetComponent<Rigidbody2D>();
             characterRigidBody.centerOfMass = centerOfMass.position;
-            m_pCharacter = GetComponent<PlayerCharacter>();
+            m_pc = GetComponent<PlayerCharacter>();
         }
 
         private void Update()
@@ -66,11 +66,12 @@ namespace RoguelikeGame
             }
             else if (Input.GetButtonDown("Jump"))
             {
+                m_pc.PlayerState.NextState((int)GSDefine.PlayerState.JUMP);
                 m_bJump = true;
             }
-            else if(Input.GetMouseButtonDown(0) && m_pCharacter.PlayerState.Current() == (int)GSDefine.PlayerState.IDLE)
+            else if(Input.GetMouseButtonDown(0) && m_pc.CanAttack())
             {
-                m_pCharacter.PlayerState.NextState((int)GSDefine.PlayerState.ATTACK);
+                m_pc.PlayerState.NextState((int)GSDefine.PlayerState.ATTACK);
             }
         }
 
@@ -132,7 +133,9 @@ namespace RoguelikeGame
             for (int i = 0; i < colliders.Length; i++)                                                                  //  p.s. 要設定tag 設定種類再討論
             {
                 if (colliders[i].gameObject != gameObject)
+                {
                     m_isGrounded = true;
+                }
             }
             m_characterAnim.SetBool("Ground", m_isGrounded);
         }

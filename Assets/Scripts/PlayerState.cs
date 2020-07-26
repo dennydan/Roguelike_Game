@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RoguelikeGame
 {
@@ -8,9 +9,10 @@ namespace RoguelikeGame
     public class PlayerState : MonoBehaviour
     {
         [SerializeField] float m_attackInterval = 0.5f;
+        [SerializeField] Image m_healthBarImg; 
 
         StateMachine m_playerState;
-        PlayerCharacter m_pCharacter;
+        PlayerCharacter m_pc;
         Animator m_characterAnim;
         Monster m_npc = null;
         Weapon m_weapon;
@@ -22,23 +24,21 @@ namespace RoguelikeGame
 
         private void Awake()
         {
-            m_pCharacter = GetComponent<PlayerCharacter>();
+            m_pc = GetComponent<PlayerCharacter>();
             m_characterAnim = GetComponent<Animator>();
             m_weapon =  GetComponentInChildren<Weapon>();
             m_playerState = new StateMachine((int)GSDefine.PlayerState.IDLE);
-            m_pCharacter.PlayerState = m_playerState;
+            m_pc.PlayerState = m_playerState;
         }
 
         void Start()
         {
-            m_attackTime = m_attackInterval;
-            m_combatTime = m_attackInterval;
         }
 
         void Update()
         {
             int currentState = m_playerState.Tick();
-            ResetCombo();
+            
             switch (currentState)
             {
                 case (int)GSDefine.PlayerState.IDLE:
@@ -57,7 +57,7 @@ namespace RoguelikeGame
                             m_characterAnim.SetTrigger("Attack");
                             AttackCombat();
                         }
-                        if(CanAttack())
+                        if(HasCooledDown())
                         {
                             m_playerState.NextState((int)GSDefine.PlayerState.IDLE);
                         }
@@ -67,15 +67,32 @@ namespace RoguelikeGame
                     // 暫不知道怎麼用
                     break;
                 case (int)GSDefine.PlayerState.JUMP:
-                    // 暫不使用 
-                    break;
+                    {
+                        if (m_playerState.IsEntering())
+                        {
+                            Debug.Log("JUMP");
+                        }
+                        break;
+                    }
                 case (int)GSDefine.PlayerState.DIE:
-                    break;
+                    {
+                        if(m_playerState.IsEntering())
+                        {
+                            Debug.Log("DIE");
+                            Destroy(gameObject);
+                        }
+                        break;
+                    }
                 default:
                     break;
 
             }
 
+        }
+
+        private void FixedUpdate()
+        {
+            UpdateStatus();
         }
 
 
@@ -110,12 +127,32 @@ namespace RoguelikeGame
             }
         }
 
-        private bool CanAttack()
+        private bool HasCooledDown()
         {
             m_attackTime -= Time.deltaTime;
             if (m_attackTime <= 0)
             {
-                m_attackTime = m_attackInterval;
+                switch (m_attackCount)
+                {
+                    case 0:
+                        {
+                            m_attackTime = m_attackInterval / 5;
+                            break;
+                        }
+                    case 1:
+                        {
+                            m_attackTime = m_attackInterval;
+                            break;
+                        }
+                    case 2:
+                        {
+                            m_attackTime = m_attackInterval;
+                            break;
+                        }
+
+                    default:
+                        break;
+                }
                 m_combatTime = m_attackInterval;
                 return true;
             }
@@ -128,26 +165,19 @@ namespace RoguelikeGame
             if(m_bStartAttack)
             {
                 m_combatTime -= Time.deltaTime;
-                if (m_combatTime <= 0)
+                if (m_combatTime <= 0 || m_playerState.Current() == (int)GSDefine.PlayerState.JUMP)
                 {
                     m_bStartAttack = false;
                     m_attackCount = 0;
                 }
             }
         }
-        /*
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Monster"))
-                m_npc = other.GetComponent<Monster>();
-        }
 
-        private void OnTriggerExit2D(Collider2D other)
+        private void UpdateStatus()
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Monster"))
-                m_npc = null;
+            ResetCombo();
+            m_healthBarImg.fillAmount = m_pc.GetHealthPercentage();
         }
-        */
     }
 }
 

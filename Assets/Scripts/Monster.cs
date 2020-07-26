@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace RoguelikeGame
 {
     public class Monster : MonoBehaviour, IDemagable
     {
+        [SerializeField] Image m_healthBarImg; 
         [SerializeField] float m_maxHealth = 5;
         float m_health;
         float m_healthFactor = 1.0f;
@@ -11,18 +13,18 @@ namespace RoguelikeGame
 
         bool isFacingRight = false;
 
+
+        private void Awake()
+        {
+            SetHealth();
+        }
         private void Update()
         {
             if(IsDead())
             {
-                // 目前先直接刪除物件，之後要加死亡動畫&特效，再刪除
+                // 目前先直接刪除物件，之後要加死亡動 畫&特效，再刪除
                 Destroy(gameObject);  
             }
-        }
-
-        private void Awake()
-        {
-            m_health = m_maxHealth * (NPCLevel * m_healthFactor + 1);
         }
 
         void IDemagable.Demage(float demage)
@@ -31,6 +33,7 @@ namespace RoguelikeGame
             {
                 //Debug.Log("M Demage" + demage);
                 m_health -= demage;
+                m_healthBarImg.fillAmount = GetHealthPercentage();
             }
         }
 
@@ -59,6 +62,17 @@ namespace RoguelikeGame
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
+        }
+
+        void SetHealth ()
+        {
+            m_health = m_maxHealth * (NPCLevel * m_healthFactor + 1);
+        }
+
+        float GetHealthPercentage()
+        {
+            float maxHealthFactor = m_maxHealth * (NPCLevel * m_healthFactor + 1);
+            return m_health / maxHealthFactor;
         }
     }
 }

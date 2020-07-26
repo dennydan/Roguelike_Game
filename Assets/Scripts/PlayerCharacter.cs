@@ -10,14 +10,14 @@ namespace RoguelikeGame
         [SerializeField] float m_maxHealth = 5;
         [SerializeField] float m_maxSpeed = 10.0f;
         float m_health;
-        float m_healthFactor = 1;
+        float m_healthFactor = 0.1f;
         int CharacterLevel = 1;
         StateMachine FSM;
         public StateMachine  PlayerState { set { FSM = value; } get { return FSM; } }
 
         private void Awake()
         {
-            m_health = m_maxHealth * (CharacterLevel * m_healthFactor + 1);
+            SetHealth();
         }
 
         private void Update()
@@ -37,6 +37,10 @@ namespace RoguelikeGame
                 m_health -= demage;
                 //Debug.Log("Health :　" + m_health);
             }
+            else
+            {
+                PlayerState.NextState((int)GSDefine.PlayerState.DIE);
+            }
         }
 
         public float GetMaxSpeed()
@@ -48,6 +52,22 @@ namespace RoguelikeGame
         public void SetMaxSpeed(float speed)
         {
             m_maxSpeed = speed;
+        }
+
+        private void SetHealth()
+        {
+            m_health = m_maxHealth * (CharacterLevel * m_healthFactor + 1);
+        }
+
+        public float GetHealthPercentage()
+        {
+            float maxHealthFactor = m_maxHealth * (CharacterLevel * m_healthFactor + 1);
+            return m_health / maxHealthFactor;
+        }
+        public bool CanAttack()
+        {
+            return PlayerState.Current() == (int)GSDefine.PlayerState.IDLE
+                || PlayerState.Current() == (int)GSDefine.PlayerState.JUMP;
         }
     }
 }
