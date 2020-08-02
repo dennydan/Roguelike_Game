@@ -1,32 +1,57 @@
-﻿using System.Collections;
+﻿using RoguelikeGame;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
 {
     [SerializeField] GameObject[] m_monsterType;
+    [SerializeField] RLG_GameState m_gs;
     // Start is called before the first frame update
     bool m_isSpawning = false;
-    float m_spawnTime = 10.0f;
-
+    bool m_canSpawn = false;
+    float m_spawnTime = 5.0f;
+    int m_spawnType = 0;
+    
+    // 生怪種類判斷
     void Start()
     {
-        StartCoroutine(SpawnMonster());
+        m_gs.MonsterSpawned(StartSpawn, StopSpawn);
     }
-    IEnumerator SpawnMonster()
+
+    public void StartSpawn()
     {
+        m_canSpawn = true;
+        StartCoroutine(SpawnMonster(m_spawnType));
+    }
+
+    public void StopSpawn()
+    {
+        m_canSpawn = false;
+        StopCoroutine(SpawnMonster(m_spawnType));
+    }
+
+    bool CanSpawn()
+    {
+        return !m_isSpawning && m_canSpawn;
+    }
+
+    IEnumerator SpawnMonster(int type)
+    {
+        m_isSpawning = true;
         yield return new WaitForSeconds(m_spawnTime);
-        Instantiate(m_monsterType[0], transform);
         m_isSpawning = false;
+        if(type < m_monsterType.Length)
+            Instantiate(m_monsterType[type], transform).GetComponent<Monster>().SetGameState(m_gs);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!m_isSpawning)
+        if(CanSpawn())
         {
-            m_isSpawning = true;
-            StartCoroutine(SpawnMonster());
+            //StartCoroutine(SpawnMonster(m_spawnType));
         }
     }
 }

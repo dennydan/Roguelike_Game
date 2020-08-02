@@ -9,10 +9,10 @@ namespace RoguelikeGame
         [SerializeField] float m_maxHealth = 5;
         float m_health;
         float m_healthFactor = 1.0f;
-        int NPCLevel = 1;
+        int m_NPCLevel = 1;
 
-        bool isFacingRight = false;
-
+        bool m_isFacingRight = false;
+        RLG_GameState m_gs;
 
         private void Awake()
         {
@@ -23,7 +23,8 @@ namespace RoguelikeGame
             if(IsDead())
             {
                 // 目前先直接刪除物件，之後要加死亡動 畫&特效，再刪除
-                Destroy(gameObject);  
+
+                m_gs.MonsterDead(DeadImplement);
             }
         }
 
@@ -39,11 +40,11 @@ namespace RoguelikeGame
 
         public void LookAtPlayer(Vector2 pos)
         {
-            if (transform.position.x < pos.x && !isFacingRight)
+            if (transform.position.x < pos.x && !m_isFacingRight)
             {
                 Filp();
             }
-            else if (transform.position.x > pos.x && isFacingRight)
+            else if (transform.position.x > pos.x && m_isFacingRight)
             {
                 Filp();
             }
@@ -55,9 +56,14 @@ namespace RoguelikeGame
             return m_health <= 0.0f;
         }
 
+        private void DeadImplement()
+        {
+            Destroy(gameObject);
+        }
+
         void Filp()
         {
-            isFacingRight = !isFacingRight;
+            m_isFacingRight = !m_isFacingRight;
             transform.Rotate(0f, 180f, 0f);
             Vector3 scale = transform.localScale;
             scale.x *= -1;
@@ -66,13 +72,18 @@ namespace RoguelikeGame
 
         void SetHealth ()
         {
-            m_health = m_maxHealth * (NPCLevel * m_healthFactor + 1);
+            m_health = m_maxHealth * (m_NPCLevel * m_healthFactor + 1);
         }
 
         float GetHealthPercentage()
         {
-            float maxHealthFactor = m_maxHealth * (NPCLevel * m_healthFactor + 1);
+            float maxHealthFactor = m_maxHealth * (m_NPCLevel * m_healthFactor + 1);
             return m_health / maxHealthFactor;
+        }
+
+        public void SetGameState(RLG_GameState gs)
+        {
+            m_gs = gs;
         }
     }
 }
