@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RLG_GameState : MonoBehaviour
 {
-    private int m_maxMonsterAmount = 2;
+    [SerializeField] int m_maxMonsterAmount = 2;
     private int m_monsterAmount = 0;
     private Action m_spawnMonster;
     private Action m_stopSpawnMonster;
@@ -18,6 +18,11 @@ public class RLG_GameState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateMonsterAmount();
+    }
+
+    private void UpdateMonsterAmount()
+    {
         if (m_monsterAmount >= m_maxMonsterAmount)
         {
             Debug.Log("Too much !");
@@ -25,15 +30,18 @@ public class RLG_GameState : MonoBehaviour
         }
         else
         {
-            m_monsterAmount++;
             m_spawnMonster.Invoke();
         }
+    }
+
+    public void AddMonsterAmount(int amount)
+    {
+        m_monsterAmount = m_monsterAmount + amount;
     }
 
     public void MonsterSpawned(Action spawn, Action stopSpawn)
     {
         // 生怪調用方法
-        m_monsterAmount++;
         spawn.Invoke();
         m_spawnMonster = spawn;
         m_stopSpawnMonster = stopSpawn;

@@ -14,7 +14,7 @@ public class MonsterSpawner : MonoBehaviour
     float m_spawnTime = 5.0f;
     int m_spawnType = 0;
     
-    // 生怪種類判斷
+    // 生怪種類判斷 等級判斷(目前訂生5次 生1等)
     void Start()
     {
         m_gs.MonsterSpawned(StartSpawn, StopSpawn);
@@ -39,19 +39,16 @@ public class MonsterSpawner : MonoBehaviour
 
     IEnumerator SpawnMonster(int type)
     {
-        m_isSpawning = true;
-        yield return new WaitForSeconds(m_spawnTime);
-        m_isSpawning = false;
-        if(type < m_monsterType.Length)
-            Instantiate(m_monsterType[type], transform).GetComponent<Monster>().SetGameState(m_gs);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         if(CanSpawn())
         {
-            //StartCoroutine(SpawnMonster(m_spawnType));
+            m_isSpawning = true;
+            yield return new WaitForSeconds(m_spawnTime);
+            m_isSpawning = false;
+            if (type < m_monsterType.Length)
+            {
+                Instantiate(m_monsterType[type], transform).GetComponent<Monster>().SetGameState(m_gs);
+                m_gs.AddMonsterAmount(1);
+            }
         }
     }
 }
