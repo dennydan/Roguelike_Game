@@ -60,7 +60,7 @@ namespace RoguelikeGame
         }
         public void TakeDemage(IDemagable demagable, float demageFactor)
         {
-            Debug.Log("Demage : " + demageFactor.ToString());
+            //Debug.Log("Demage : " + demageFactor.ToString());
             demagable.Demage(m_demage * demageFactor);
         }
 

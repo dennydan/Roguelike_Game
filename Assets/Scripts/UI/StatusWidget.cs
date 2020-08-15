@@ -1,11 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class GameInstance : MonoBehaviour
+public class StatusWidget : MonoBehaviour
 {
-    [SerializeField] Text DebugLog;
     // Start is called before the first frame update
     void Start()
     {

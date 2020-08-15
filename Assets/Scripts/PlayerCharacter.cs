@@ -9,6 +9,7 @@ namespace RoguelikeGame
     {
         [SerializeField] float m_maxHealth = 5;
         [SerializeField] float m_maxSpeed = 10.0f;
+        float m_exp = 0;
         float m_health;
         float m_healthFactor = 0.1f;
         int CharacterLevel = 1;

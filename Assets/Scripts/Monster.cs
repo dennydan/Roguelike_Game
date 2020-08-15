@@ -85,8 +85,11 @@ namespace RoguelikeGame
         {
             m_gs = gs;
         }
-
-
+        public void UpgradeLevel(int level)
+        {
+            m_NPCLevel = m_NPCLevel + level;
+            SetHealth();
+        }
     }
 }
 
