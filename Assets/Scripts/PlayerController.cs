@@ -3,17 +3,24 @@
 /*
  * 已知BUG:
  *  1.踩到敵人算落地 可跳敵人(你馬力歐?)
- *  2.撞牆算落地 (延伸問題:斜牆可爬?)
+ *  2.撞牆算落地
+ *      (1)牆壁算是地板，因此貼牆算落地
+ *      (2)牆壁不算落地，只是不能跳躍，一樣會卡住
  *  
- *  2020/07/16
+ *  2020/08/09
  *  目前遊戲內尺寸測量: 
     1.跳躍高度約2格高
-    2.跳躍長度約5格遠
+    2.跳躍長度約3格遠
     3.走路速度約3格/s
-    TODO: 統一度量衡、世界標準、變數名稱規則
- *  迴避動作v1.0:
-    +從ROLL正名為DODGE、迴避後冷卻1s、實際迴避時間0.3s、跳躍時不能迴避、迴避時短暫加速
+    TODO: 世界標準、變數名稱規則
     TODO: 迴避無敵(等生命值)、納入技能系統、納入狀態機
+
+    +角色能力修正、統一(跑速、跳躍高度)
+    +地形_1x1(Environment物件放地形)
+    TODO:如何重設為標準? 地板跟牆壁如何區分?
+
+    +prefab修正座標、旋轉
+    +房間微調
  *  
  * */
 
@@ -22,8 +29,8 @@ namespace RoguelikeGame
     [RequireComponent(typeof(PlayerCharacter))]
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] float maxSpeed = 1f;
-        [SerializeField] float jumpForce = 100f;
+        [SerializeField] float speed = 150f;
+        [SerializeField] float jumpForce = 320f;
         [SerializeField] LayerMask Ground_Layer;
         [SerializeField] string groundCheckName = "GroundCheck";
         [SerializeField] string ceilingCheckName = "CeilingCheck";
@@ -59,7 +66,7 @@ namespace RoguelikeGame
 
         private void Update()
         {
-            m_speedFactor = Mathf.Lerp(0f, maxSpeed, 0.01f) * Time.fixedDeltaTime;
+            m_speedFactor = Mathf.Lerp(0f, speed, 0.01f) * Time.fixedDeltaTime;
             if (Input.GetButtonDown("Dodge"))
             {
                 m_bDodge = true;
@@ -110,8 +117,8 @@ namespace RoguelikeGame
                 Flip();
 
             //TODO:是否能合成一行?  moveSpeed * maxSpeed * dodgeFactor * dodging
-            if (dodging) characterRigidBody.velocity = new Vector2(moveSpeed * maxSpeed * dodgeFactor, characterRigidBody.velocity.y);
-            else        characterRigidBody.velocity = new Vector2(moveSpeed * maxSpeed, characterRigidBody.velocity.y);
+            if (dodging) characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
+            else        characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
 
             moveSpeed = Mathf.Abs(moveSpeed);
             m_characterAnim.SetFloat("Speed", moveSpeed);

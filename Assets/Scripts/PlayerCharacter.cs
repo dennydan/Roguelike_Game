@@ -35,7 +35,7 @@ namespace RoguelikeGame
             if (!IsDead())
             {
                 m_health -= demage;
-                //Debug.Log("Health :　" + m_health);
+                Debug.Log("Health :　" + m_health);
             }
             else
             {

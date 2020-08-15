@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 1947524966003924339}
   m_Layer: 9
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,8 +56,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06398ca975c2be044bfdc4d3d4ea413b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_maxHealth: 1000
-  m_maxSpeed: 10
+  m_maxHealth: 50000
+  m_maxSpeed: 300
 --- !u!114 &8386281000729059001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,11 +70,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a35bbcd778af548988ff836da35804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 150
-  jumpForce: 120
+  speed: 150
+  jumpForce: 320
   Ground_Layer:
     serializedVersion: 2
-    m_Bits: 1335
+    m_Bits: 311
   groundCheckName: GroundCheck
   ceilingCheckName: CeilingCheck
   centerOfMass: {fileID: 6768026595613105428}
@@ -108,9 +108,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 0.42512506
-  m_LinearDrag: 0
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 4
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -377,10 +377,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_demage: 2
-  m_demageRange: 1
+  m_demageRange: 0.5
   mask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
 --- !u!1001 &6582546794984765790
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -491,6 +491,16 @@ PrefabInstance:
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8131058204802925755, guid: 2b381e75a6572324bb79804583c71234,
+        type: 3}
+      propertyPath: m_Type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8131058204802925755, guid: 2b381e75a6572324bb79804583c71234,
+        type: 3}
+      propertyPath: m_FillMethod
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8264896267136953676, guid: 2b381e75a6572324bb79804583c71234,
