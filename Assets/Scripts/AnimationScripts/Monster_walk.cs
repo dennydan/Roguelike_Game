@@ -29,7 +29,7 @@ namespace RoguelikeGame
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if(m_monster.IsDead() || m_player == null)
+            if (m_monster.IsDead() || m_player == null)
             {
                 return;
             }
@@ -40,6 +40,7 @@ namespace RoguelikeGame
                 return;
             }
             */
+            //TODO: 怪物攻擊速度過快( or 玩家受傷速度過快)
             else if (Can_Attack())
             {
                 animator.SetTrigger("NPCAttack");

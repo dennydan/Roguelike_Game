@@ -2,25 +2,22 @@
 
 /*
  * 已知BUG:
- *  1.踩到敵人算落地 可跳敵人(你馬力歐?)
- *  2.撞牆算落地
- *      (1)牆壁算是地板，因此貼牆算落地
- *      (2)牆壁不算落地，只是不能跳躍，一樣會卡住
+ *  1.牆壁不算落地，只是不能跳躍，一樣會卡住
+ *  2.低高度浮空可跳躍
+ *  3.人物怪物轉向 血條也轉向
+ *  4.怪物傷害速度過快
  *  
- *  2020/08/09
+ *  2020/08/15
  *  目前遊戲內尺寸測量: 
     1.跳躍高度約2格高
     2.跳躍長度約3格遠
     3.走路速度約3格/s
     TODO: 世界標準、變數名稱規則
-    TODO: 迴避無敵(等生命值)、納入技能系統、納入狀態機
+    TODO: 迴避無敵(等生命值)、納入技能系統
+    TODO: 地形如何重設為標準? 地板跟牆壁如何區分?
+    TODO: 通一生物Entity控制器
 
-    +角色能力修正、統一(跑速、跳躍高度)
-    +地形_1x1(Environment物件放地形)
-    TODO:如何重設為標準? 地板跟牆壁如何區分?
-
-    +prefab修正座標、旋轉
-    +房間微調
+    +閃避納入狀態機
  *  
  * */
 
@@ -69,6 +66,7 @@ namespace RoguelikeGame
             m_speedFactor = Mathf.Lerp(0f, speed, 0.01f) * Time.fixedDeltaTime;
             if (Input.GetButtonDown("Dodge"))
             {
+                m_pc.PlayerState.NextState((int)GSDefine.PlayerState.DODGE);
                 m_bDodge = true;
             }
             else if (Input.GetButtonDown("Jump"))
@@ -90,7 +88,7 @@ namespace RoguelikeGame
 
         void CharacterAction()
         {
-            // 左右移動  
+            // 左右移動
             Move(Input.GetAxisRaw("Horizontal") * m_speedFactor, false, m_bJump, m_bDodge);
             m_bJump = false;
             m_bDodge = false;
@@ -108,15 +106,16 @@ namespace RoguelikeGame
             {
                 dodgeCount = 0;
                 dodging = true;
-                m_characterAnim.SetTrigger("Dodge");
             }
 
+            //人物轉向
             if (moveSpeed > 0 && !m_bFacingRight)
                 Flip();
             else if (moveSpeed < 0 && m_bFacingRight)
                 Flip();
 
             //TODO:是否能合成一行?  moveSpeed * maxSpeed * dodgeFactor * dodging
+            //TODO: 牆壁不算落地，只是不能跳躍，一樣會卡住
             if (dodging) characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
             else        characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
 
@@ -124,6 +123,7 @@ namespace RoguelikeGame
             m_characterAnim.SetFloat("Speed", moveSpeed);
 
             //Jump, 接動畫(跳躍)
+            //TODO:跳躍力道 按住跳更高 放開則停止跳躍(按住持續給力 隨時間給越少 放開則不給力)
             if (m_isGrounded && jump)
             {
                 m_isGrounded = false;
@@ -132,12 +132,13 @@ namespace RoguelikeGame
             }
         }
 
+        //TODO: 低高度浮空可跳躍
         void Set_isGrounded()
         {
             m_isGrounded = false;
 
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(m_groundCheck.position, k_GroundRadius, Ground_Layer);    //  TODO:撞牆不能算落地; 踩到敵人算落地 可跳敵人(你馬力歐?)
-            for (int i = 0; i < colliders.Length; i++)                                                                  //  p.s. 要設定tag 設定種類再討論
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(m_groundCheck.position, k_GroundRadius, Ground_Layer);
+            for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].gameObject != gameObject)
                 {
@@ -147,6 +148,7 @@ namespace RoguelikeGame
             m_characterAnim.SetBool("Ground", m_isGrounded);
         }
 
+        //TODO: 人物怪物轉向 血條也轉向
         void Flip()
         {
             m_bFacingRight = !m_bFacingRight;

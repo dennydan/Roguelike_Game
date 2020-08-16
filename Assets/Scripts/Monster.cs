@@ -61,6 +61,7 @@ namespace RoguelikeGame
             Destroy(gameObject);
         }
 
+        //TODO: 人物怪物轉向 血條也轉向
         void Filp()
         {
             m_isFacingRight = !m_isFacingRight;

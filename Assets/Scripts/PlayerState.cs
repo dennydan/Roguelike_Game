@@ -57,15 +57,21 @@ namespace RoguelikeGame
                             m_characterAnim.SetTrigger("Attack");
                             AttackCombat();
                         }
-                        if(HasCooledDown())
+                        if (HasCooledDown())
                         {
                             m_playerState.NextState((int)GSDefine.PlayerState.IDLE);
                         }
                         break;
                     }
                 case (int)GSDefine.PlayerState.DODGE:
-                    // 暫不知道怎麼用
-                    break;
+                    {
+                        if (m_playerState.IsEntering())
+                        {
+                            m_characterAnim.SetTrigger("Dodge");
+                            Debug.Log("DODGE");
+                        }
+                        break;
+                    }
                 case (int)GSDefine.PlayerState.JUMP:
                     {
                         if (m_playerState.IsEntering())
@@ -76,7 +82,7 @@ namespace RoguelikeGame
                     }
                 case (int)GSDefine.PlayerState.DIE:
                     {
-                        if(m_playerState.IsEntering())
+                        if (m_playerState.IsEntering())
                         {
                             Debug.Log("DIE");
                             Destroy(gameObject);
@@ -162,7 +168,7 @@ namespace RoguelikeGame
 
         private void ResetCombo()
         {
-            if(m_bStartAttack)
+            if (m_bStartAttack)
             {
                 m_combatTime -= Time.deltaTime;
                 if (m_combatTime <= 0 || m_playerState.Current() == (int)GSDefine.PlayerState.JUMP)
