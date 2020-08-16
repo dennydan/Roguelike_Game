@@ -9,16 +9,20 @@ namespace RoguelikeGame
     {
         [SerializeField] float m_maxHealth = 5;
         [SerializeField] float m_maxSpeed = 10.0f;
-        float m_exp = 0;
+        [SerializeField] RLG_GameState m_gs;
+        int m_level = 1;
         float m_health;
         float m_healthFactor = 0.1f;
-        int CharacterLevel = 1;
+        float m_exp = 0;
+        float m_expFactor = 3.0f;
+        float m_maxExp;    
         StateMachine FSM;
         public StateMachine  PlayerState { set { FSM = value; } get { return FSM; } }
 
         private void Awake()
         {
-            SetHealth();
+            InitStatus();
+
         }
 
         private void Update()
@@ -55,15 +59,38 @@ namespace RoguelikeGame
             m_maxSpeed = speed;
         }
 
-        private void SetHealth()
+        private void InitStatus()
         {
-            m_health = m_maxHealth * (CharacterLevel * m_healthFactor + 1);
+            m_level = 1;    // 先寫死之後重存檔抓
+            m_health = m_maxHealth * (m_level * m_healthFactor + 1);
+            m_maxExp = m_level * m_expFactor;
         }
-
+        public int GetLevel()
+        {
+            return m_level;
+        }
         public float GetHealthPercentage()
         {
-            float maxHealthFactor = m_maxHealth * (CharacterLevel * m_healthFactor + 1);
+            float maxHealthFactor = m_maxHealth * (m_level * m_healthFactor + 1);
             return m_health / maxHealthFactor;
+        }
+        public float GetExpPercentage()
+        {
+            return m_exp / m_maxExp;
+        }
+
+        public void AddCharacterExp(float exp)
+        {
+            m_exp = m_exp + exp;
+            if (m_exp >= m_maxExp)
+                UpgradeLevel();
+        }
+        public void UpgradeLevel()
+        {
+            m_level++;
+            m_exp = m_exp - m_maxExp;
+            m_maxExp = m_level * m_expFactor;
+        
         }
         public bool CanAttack()
         {

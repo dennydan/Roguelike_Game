@@ -94,7 +94,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_attackInterval: 0.5
-  m_healthBarImg: {fileID: 3138645226361339365}
 --- !u!50 &2176955952676380701
 Rigidbody2D:
   serializedVersion: 4
@@ -388,6 +387,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8362058129232229509}
     m_Modifications:
+    - target: {fileID: 2027859850707997073, guid: 2b381e75a6572324bb79804583c71234,
+        type: 3}
+      propertyPath: m_isPlayer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -516,15 +520,3 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6582546794984765790}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3138645226361339365 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8131058204802925755, guid: 2b381e75a6572324bb79804583c71234,
-    type: 3}
-  m_PrefabInstance: {fileID: 6582546794984765790}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

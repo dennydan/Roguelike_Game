@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace RoguelikeGame
@@ -9,13 +7,14 @@ namespace RoguelikeGame
     public class PlayerState : MonoBehaviour
     {
         [SerializeField] float m_attackInterval = 0.5f;
-        [SerializeField] Image m_healthBarImg; 
+        
 
         StateMachine m_playerState;
         PlayerCharacter m_pc;
         Animator m_characterAnim;
         Monster m_npc = null;
         Weapon m_weapon;
+        StatusWidget m_statusWidget;
 
         bool m_bStartAttack = false;
         float m_attackTime = 1.0f;
@@ -25,6 +24,7 @@ namespace RoguelikeGame
         private void Awake()
         {
             m_pc = GetComponent<PlayerCharacter>();
+            m_statusWidget = GetComponentInChildren<StatusWidget>();
             m_characterAnim = GetComponent<Animator>();
             m_weapon =  GetComponentInChildren<Weapon>();
             m_playerState = new StateMachine((int)GSDefine.PlayerState.IDLE);
@@ -182,7 +182,7 @@ namespace RoguelikeGame
         private void UpdateStatus()
         {
             ResetCombo();
-            m_healthBarImg.fillAmount = m_pc.GetHealthPercentage();
+            m_statusWidget.UpdateStatus(m_pc.GetLevel(), m_pc.GetHealthPercentage(), m_pc.GetExpPercentage());
         }
     }
 }

@@ -1,15 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Dynamic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace RoguelikeGame
 {
     public class Monster : MonoBehaviour, IDemagable
     {
-        [SerializeField] Image m_healthBarImg; 
+        [SerializeField] StatusWidget m_statusWidget;
         [SerializeField] float m_maxHealth = 5;
         float m_health;
         float m_healthFactor = 1.0f;
-        int m_NPCLevel = 1;
+        float m_expValue = 1.0f;
+        int m_level = 1;
 
         bool m_isFacingRight = false;
         RLG_GameState m_gs;
@@ -17,6 +19,10 @@ namespace RoguelikeGame
         private void Awake()
         {
             SetHealth();
+        }
+        private void Start()
+        {
+            m_statusWidget.UpdateStatus(m_level, GetHealthPercentage(), 0.0f);
         }
         private void Update()
         {
@@ -34,7 +40,8 @@ namespace RoguelikeGame
             {
                 //Debug.Log("M Demage" + demage);
                 m_health -= demage;
-                m_healthBarImg.fillAmount = GetHealthPercentage();
+                // 怪物目前狀態只有更新血量，故放在這邊
+                m_statusWidget.UpdateStatus(m_level, GetHealthPercentage(), 0.0f);
             }
         }
 
@@ -58,6 +65,7 @@ namespace RoguelikeGame
 
         private void DeadImplement()
         {
+            m_gs.UpdateCharacterExp(m_expValue);
             Destroy(gameObject);
         }
 
@@ -73,12 +81,13 @@ namespace RoguelikeGame
 
         void SetHealth ()
         {
-            m_health = m_maxHealth * (m_NPCLevel * m_healthFactor + 1);
+            m_health = m_maxHealth * (m_level * m_healthFactor + 1);
+            m_expValue = m_level + 1.0f;      
         }
 
         float GetHealthPercentage()
         {
-            float maxHealthFactor = m_maxHealth * (m_NPCLevel * m_healthFactor + 1);
+            float maxHealthFactor = m_maxHealth * (m_level * m_healthFactor + 1);
             return m_health / maxHealthFactor;
         }
 
@@ -88,7 +97,7 @@ namespace RoguelikeGame
         }
         public void UpgradeLevel(int level)
         {
-            m_NPCLevel = m_NPCLevel + level;
+            m_level = m_level + level;
             SetHealth();
         }
     }

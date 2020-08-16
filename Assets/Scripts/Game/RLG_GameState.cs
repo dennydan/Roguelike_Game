@@ -1,10 +1,12 @@
-﻿using System;
+﻿using RoguelikeGame;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RLG_GameState : MonoBehaviour
 {
+    [SerializeField] PlayerCharacter m_pc;
     [SerializeField] int m_maxMonsterAmount = 2;
     private int m_monsterAmount = 0;
     private Action m_spawnMonster;
@@ -50,8 +52,12 @@ public class RLG_GameState : MonoBehaviour
     // 名子要修改
     public void MonsterDead(Action dead)
     {
-        Debug.Log("Monster Dead !!!");
         m_monsterAmount--;
         dead.Invoke();
+    }
+
+    public void UpdateCharacterExp(float exp)
+    {
+        m_pc.AddCharacterExp(exp);
     }
 }
