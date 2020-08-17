@@ -41,7 +41,7 @@ namespace RoguelikeGame
             }
             */
             //TODO: 怪物攻擊速度過快( or 玩家受傷速度過快)
-            else if (Can_Attack())
+            else if (CanAttack())
             {
                 animator.SetTrigger("NPCAttack");
                 m_weapon.Attack((int)AttackType.MONSTER, 1.0f, 1.0f);
@@ -70,7 +70,7 @@ namespace RoguelikeGame
             m_monster.LookAtPlayer(target_);
         }
 
-        bool Can_Attack()
+        bool CanAttack()
         {
             return m_rigidbody && m_player && 
                 Mathf.Abs(m_rigidbody.position.x - m_player.position.x) < attackRange;

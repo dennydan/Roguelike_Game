@@ -3,14 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class RLG_GameState : MonoBehaviour
 {
     [SerializeField] PlayerCharacter m_pc;
     [SerializeField] int m_maxMonsterAmount = 2;
+    private bool m_spawning = false;
     private int m_monsterAmount = 0;
-    private Action m_spawnMonster;
-    private Action m_stopSpawnMonster;
+    private int m_spawnerIndex;
+    private List<MonsterSpawner> m_monsterSpawners = new List<MonsterSpawner>();
     // Start is called before the first frame update
     void Start()
     {
@@ -25,14 +27,18 @@ public class RLG_GameState : MonoBehaviour
 
     private void UpdateMonsterAmount()
     {
+        if (m_spawning) return;
+
         if (m_monsterAmount >= m_maxMonsterAmount)
         {
-            Debug.Log("Too much !");
-            m_stopSpawnMonster.Invoke();
+            m_monsterSpawners[m_spawnerIndex].StopSpawn();
+            m_spawning = false;
         }
         else
         {
-            m_spawnMonster.Invoke();
+            m_spawning = true;
+            m_spawnerIndex = UnityEngine.Random.Range(0, m_monsterSpawners.Capacity - 1);
+            m_monsterSpawners[m_spawnerIndex].StartSpawn(()=> { m_spawning = false; });
         }
     }
 
@@ -41,12 +47,10 @@ public class RLG_GameState : MonoBehaviour
         m_monsterAmount = m_monsterAmount + amount;
     }
 
-    public void MonsterSpawned(Action spawn, Action stopSpawn)
+    public void InitSpawners(MonsterSpawner spawner)
     {
-        // 生怪調用方法
-        spawn.Invoke();
-        m_spawnMonster = spawn;
-        m_stopSpawnMonster = stopSpawn;
+        // monster spawner 自己加進來
+        m_monsterSpawners.Add(spawner);
     }
 
     // 名子要修改

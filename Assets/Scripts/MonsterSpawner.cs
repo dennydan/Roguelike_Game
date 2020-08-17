@@ -7,27 +7,34 @@ using UnityEngine;
 public class MonsterSpawner : MonoBehaviour
 {
     [SerializeField] GameObject[] m_monsterType;
-    [SerializeField] RLG_GameState m_gs;
     [SerializeField] int m_maxCount = 5;
+    [SerializeField] float m_spawnTime = 2.0f;
     // Start is called before the first frame update
+    RLG_GameState m_gs;
+    Action m_spawnedCB;
     bool m_isSpawning = false;
     bool m_canSpawn = false;
-    float m_spawnTime = 5.0f;
     
     int m_spawnType = 0;
     int m_spawnCount = 0;
     int m_spawnLevel = 0;
-    
+
     // 生怪種類判斷 等級判斷(目前訂生5次 生1等)
+    void Awake()
+    {
+        m_gs = GameObject.Find("GameManager").GetComponent<RLG_GameState>();
+    }
     void Start()
     {
-        m_gs.MonsterSpawned(StartSpawn, StopSpawn);
+        m_gs.InitSpawners(this);
     }
 
-    public void StartSpawn()
+    public void StartSpawn(Action spawnCB)
     {
         
         m_canSpawn = true;
+        m_spawnedCB = spawnCB;
+        m_spawnType = UnityEngine.Random.Range(0, m_monsterType.Length - 1);
         StartCoroutine(SpawnMonster(m_spawnType));
     }
 
@@ -64,8 +71,8 @@ public class MonsterSpawner : MonoBehaviour
             {
                 Monster monster = Instantiate(m_monsterType[type], transform).GetComponent<Monster>();
                 monster.SetGameState(m_gs);
-                // Update 有問題
                 monster.UpgradeLevel(m_spawnLevel);
+                m_spawnedCB();
                 m_gs.AddMonsterAmount(1);
             }
         }
