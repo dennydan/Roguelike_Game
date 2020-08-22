@@ -15,14 +15,13 @@ namespace RoguelikeGame
         float m_healthFactor = 0.1f;
         float m_exp = 0;
         float m_expFactor = 3.0f;
-        float m_maxExp;    
+        float m_maxExp;
         StateMachine FSM;
         public StateMachine  PlayerState { set { FSM = value; } get { return FSM; } }
 
         private void Awake()
         {
             InitStatus();
-
         }
 
         private void Update()
@@ -50,7 +49,6 @@ namespace RoguelikeGame
 
         public float GetMaxSpeed()
         {
-            //Debug.Log("Speed" + m_maxSpeed);
             return m_maxSpeed;
         }
 
@@ -61,7 +59,7 @@ namespace RoguelikeGame
 
         private void InitStatus()
         {
-            m_level = 1;    // 先寫死之後重存檔抓
+            m_level = 1;    // 目前先寫死之後從存檔抓
             m_health = m_maxHealth * (m_level * m_healthFactor + 1);
             m_maxExp = m_level * m_expFactor;
         }

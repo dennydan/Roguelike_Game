@@ -3,6 +3,13 @@ using UnityEngine.UI;
 
 namespace RoguelikeGame
 {
+    
+    enum ParticleEffects
+    {
+        NORMAL = 0,
+        COMBO_1,
+        COMBO_2
+    }
     [RequireComponent(typeof(PlayerCharacter))]
     public class PlayerState : MonoBehaviour
     {
@@ -15,11 +22,14 @@ namespace RoguelikeGame
         Monster m_npc = null;
         Weapon m_weapon;
         StatusWidget m_statusWidget;
+        ParticleSystem[] m_effects;
 
         bool m_bStartAttack = false;
         float m_attackTime = 1.0f;
         float m_combatTime = 1.0f;
         int m_attackCount = 0;
+        int m_hitEffectsAmount = 2;
+        Vector3 m_hitOffset = new Vector3(0, 0.5f, 0);
 
         private void Awake()
         {
@@ -29,6 +39,8 @@ namespace RoguelikeGame
             m_weapon =  GetComponentInChildren<Weapon>();
             m_playerState = new StateMachine((int)GSDefine.PlayerState.IDLE);
             m_pc.PlayerState = m_playerState;
+
+            SetHitEffect();
         }
 
         void Start()
@@ -57,7 +69,7 @@ namespace RoguelikeGame
                             m_characterAnim.SetTrigger("Attack");
                             AttackCombat();
                         }
-                        if (HasCooledDown())
+                        if (HasColdDown())
                         {
                             m_playerState.NextState((int)GSDefine.PlayerState.IDLE);
                         }
@@ -69,6 +81,10 @@ namespace RoguelikeGame
                         {
                             m_characterAnim.SetTrigger("Dodge");
                             Debug.Log("DODGE");
+                        }
+                        else
+                        {
+                            m_playerState.NextState((int)GSDefine.PlayerState.IDLE);
                         }
                         break;
                     }
@@ -106,24 +122,32 @@ namespace RoguelikeGame
         {
 
             m_combatTime = m_attackInterval;
+
             switch (m_attackCount)
             {
                 case 0:
                     {
+                        Debug.Log("Attack_0");
+
                         m_bStartAttack = true;
-                        m_weapon.Attack((int)AttackType.PLAYER, 1.0f, 1.0f);
+                        Transform target = m_weapon.Attack((int)AttackType.PLAYER, 1.0f, 1.0f);
+                        CreateHitEffect((int)GSDefine.AttackEffect.Hit_POOF, target);
                         m_attackCount++;
                         break;
                     }
                 case 1:
                     {
-                        m_weapon.Attack((int)AttackType.PLAYER, 1.2f, 1.2f);
+                        Debug.Log("Attack_1");
+                        Transform target = m_weapon.Attack((int)AttackType.PLAYER, 1.2f, 1.2f);
+                        CreateHitEffect((int)GSDefine.AttackEffect.Hit_POOF, target);
                         m_attackCount++;
                         break;
                     }
                 case 2:
                     {
-                        m_weapon.Attack((int)AttackType.PLAYER, 2.0f, 2.0f);
+                        Debug.Log("Attack_2");
+                        Transform target = m_weapon.Attack((int)AttackType.PLAYER, 2.0f, 2.0f);
+                        CreateHitEffect((int)GSDefine.AttackEffect.HIT_VIRUS, target);
                         m_attackCount = 0;
                         break;
                     }
@@ -133,7 +157,8 @@ namespace RoguelikeGame
             }
         }
 
-        private bool HasCooledDown()
+        // 設定連擊CD
+        private bool HasColdDown()
         {
             m_attackTime -= Time.deltaTime;
             if (m_attackTime <= 0)
@@ -142,7 +167,7 @@ namespace RoguelikeGame
                 {
                     case 0:
                         {
-                            m_attackTime = m_attackInterval / 5;
+                            m_attackTime = m_attackInterval/5;
                             break;
                         }
                     case 1:
@@ -152,7 +177,7 @@ namespace RoguelikeGame
                         }
                     case 2:
                         {
-                            m_attackTime = m_attackInterval;
+                            m_attackTime = m_attackInterval * 2;
                             break;
                         }
 
@@ -166,6 +191,7 @@ namespace RoguelikeGame
                return false;
         }
 
+        // 重置連擊
         private void ResetCombo()
         {
             if (m_bStartAttack)
@@ -179,10 +205,35 @@ namespace RoguelikeGame
             }
         }
 
+        // 更新狀態
         private void UpdateStatus()
         {
             ResetCombo();
             m_statusWidget.UpdateStatus(m_pc.GetLevel(), m_pc.GetHealthPercentage(), m_pc.GetExpPercentage());
+        }
+
+        // 初始化攻擊粒子特效
+        private void SetHitEffect()
+        {
+            m_effects = new ParticleSystem[m_hitEffectsAmount];
+            
+            for(int effectIndex = 0; effectIndex < m_hitEffectsAmount; effectIndex++)
+            {
+               m_effects[effectIndex] = Resources.Load<AssetLoader>("AssetLoader").GetHitParticle(effectIndex);
+            }
+        }
+        
+        // 產生攻擊粒子特效
+        private bool CreateHitEffect(int effectIndex, Transform target)
+        {
+            if(target != null && effectIndex < m_effects.Length)
+            {
+                // 目前沒特別刪除
+                ParticleSystem effect = Instantiate(m_effects[effectIndex]);
+                effect.transform.position = target.position + m_hitOffset;
+                return true;
+            }
+            return false;
         }
     }
 }

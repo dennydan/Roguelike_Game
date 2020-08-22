@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public interface IDemagable
 {
@@ -24,8 +25,9 @@ namespace RoguelikeGame
         Monster m_monster;
 
 
-        public void Attack(int type, float demageFactor, float rangeFactor)
+        public Transform Attack(int type, float demageFactor, float rangeFactor)
         {
+            Transform target = null;
             bool isAttacked = true;
             // 玩家攻擊
             if(type == (int)AttackType.PLAYER)
@@ -37,6 +39,7 @@ namespace RoguelikeGame
                     Monster npc = hit.GetComponent<Monster>();
                     if (isAttacked && npc)
                     {
+                        target = hit.transform;
                         isAttacked = false;
                         TakeDemage(npc, demageFactor);
                     }
@@ -51,12 +54,13 @@ namespace RoguelikeGame
                     PlayerCharacter pc = hit.GetComponent<PlayerCharacter>();
                     if (isAttacked && pc)
                     {
+                        target = hit.transform;
                         isAttacked = false;
                         TakeDemage(pc, demageFactor);
                     }
                 }
             }
-            
+            return target;
         }
         public void TakeDemage(IDemagable demagable, float demageFactor)
         {
