@@ -8,6 +8,8 @@ namespace RoguelikeGame
     {
         [SerializeField] StatusWidget m_statusWidget;
         [SerializeField] float m_maxHealth = 5;
+
+        Transform m_statusHUD;
         float m_health;
         float m_healthFactor = 1.0f;
         float m_expValue = 1.0f;
@@ -19,6 +21,7 @@ namespace RoguelikeGame
         private void Awake()
         {
             SetHealth();
+            m_statusHUD = transform.Find("StatusWidget");
         }
         private void Start()
         {
@@ -77,6 +80,10 @@ namespace RoguelikeGame
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
+            // 血量狀態不反轉
+            Vector3 scaleHUD = m_statusHUD.localScale;
+            scaleHUD.x *= -1;
+            m_statusHUD.localScale = scaleHUD;
         }
 
         void SetHealth ()

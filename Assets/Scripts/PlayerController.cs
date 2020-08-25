@@ -36,6 +36,7 @@ namespace RoguelikeGame
         [SerializeField] float dodgeCD = 1f;
         [SerializeField] float dodgeDuration = 0.3f;
 
+        Transform m_plaerStateHUD;
         PlayerCharacter m_pc;
         Transform m_groundCheck;                      //地面檢查
         const float k_GroundRadius = 0.2f;
@@ -59,6 +60,7 @@ namespace RoguelikeGame
             characterRigidBody = GetComponent<Rigidbody2D>();
             characterRigidBody.centerOfMass = centerOfMass.position;
             m_pc = GetComponent<PlayerCharacter>();
+            m_plaerStateHUD = transform.Find("StatusWidget");
         }
 
         private void Update()
@@ -155,6 +157,10 @@ namespace RoguelikeGame
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
+            // 血量狀態不反轉
+            Vector3 scaleHUD = m_plaerStateHUD.transform.localScale;
+            scaleHUD.x *= -1;
+            m_plaerStateHUD.localScale = scaleHUD;
         }
     }
 }

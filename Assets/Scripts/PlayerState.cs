@@ -62,6 +62,16 @@ namespace RoguelikeGame
 
                         break;
                     }
+                case (int)GSDefine.PlayerState.CASTSPELL:
+                    {
+                        // 技能施放
+                        if (m_playerState.IsEntering())
+                        {
+                            Debug.Log("CASTSPELL");
+                        }
+
+                        break;
+                    }
                 case (int)GSDefine.PlayerState.ATTACK:
                     {
                         if (m_playerState.IsEntering())
@@ -228,7 +238,6 @@ namespace RoguelikeGame
         {
             if(target != null && effectIndex < m_effects.Length)
             {
-                // 目前沒特別刪除
                 ParticleSystem effect = Instantiate(m_effects[effectIndex]);
                 effect.transform.position = target.position + m_hitOffset;
                 return true;

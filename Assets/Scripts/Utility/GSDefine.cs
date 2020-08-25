@@ -7,6 +7,7 @@ public class GSDefine : MonoBehaviour
     {
         IDLE = 1,
         ATTACK,
+        CASTSPELL,
         DODGE,
         JUMP,
         DIE 

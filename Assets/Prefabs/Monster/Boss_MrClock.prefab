@@ -182,7 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 007958768d0eff04f82c1636cf8f6319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_healthBarImg: {fileID: 3374493020204215294}
   m_statusWidget: {fileID: 4766970134885138132}
   m_maxHealth: 10
 --- !u!114 &6774480222957063394
@@ -232,7 +231,7 @@ PrefabInstance:
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
@@ -242,7 +241,7 @@ PrefabInstance:
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
@@ -257,7 +256,7 @@ PrefabInstance:
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
@@ -332,7 +331,7 @@ PrefabInstance:
     - target: {fileID: 8264896267136953676, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: StatusWidget
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b381e75a6572324bb79804583c71234, type: 3}
@@ -352,17 +351,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94bc48cfc12fe30479b4d494c556c1f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3374493020204215294 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8131058204802925755, guid: 2b381e75a6572324bb79804583c71234,
-    type: 3}
-  m_PrefabInstance: {fileID: 6774480222214647621}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

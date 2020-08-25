@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2027946123617353371}
   - component: {fileID: 8386281000729059001}
   - component: {fileID: 451972260243102973}
+  - component: {fileID: 1297043025550356410}
   - component: {fileID: 2176955952676380701}
   - component: {fileID: 1971169985906557704}
   - component: {fileID: 6988086755444340072}
@@ -58,6 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_maxHealth: 50000
   m_maxSpeed: 300
+  m_gs: {fileID: 0}
 --- !u!114 &8386281000729059001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +83,8 @@ MonoBehaviour:
   dodgeFactor: 2
   dodgeCD: 1
   dodgeDuration: 0.3
+  m_plaerStateHUD: {fileID: 0}
+  m_groundCheck: {fileID: 0}
 --- !u!114 &451972260243102973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,6 +98,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_attackInterval: 0.5
+--- !u!114 &1297043025550356410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497569062728642712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6988be5594b37794890bc5c7ab4271af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &2176955952676380701
 Rigidbody2D:
   serializedVersion: 4
@@ -387,11 +403,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8362058129232229509}
     m_Modifications:
-    - target: {fileID: 2027859850707997073, guid: 2b381e75a6572324bb79804583c71234,
-        type: 3}
-      propertyPath: m_isPlayer
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2086854989727401235, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -497,20 +508,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8131058204802925755, guid: 2b381e75a6572324bb79804583c71234,
-        type: 3}
-      propertyPath: m_Type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8131058204802925755, guid: 2b381e75a6572324bb79804583c71234,
-        type: 3}
-      propertyPath: m_FillMethod
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8264896267136953676, guid: 2b381e75a6572324bb79804583c71234,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: StatusWidget
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b381e75a6572324bb79804583c71234, type: 3}
