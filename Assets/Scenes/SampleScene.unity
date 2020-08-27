@@ -770,6 +770,12 @@ PrefabInstance:
       propertyPath: m_attackInterval
       value: 0.6
       objectReference: {fileID: 0}
+    - target: {fileID: 451972260243102973, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_spellTest
+      value: 
+      objectReference: {fileID: 5501529833156743209, guid: e5578f699a8652f48bfdf5357ac8f1fc,
+        type: 3}
     - target: {fileID: 497569062728642712, guid: 900a502f43b9ba645a989b83c1e988be,
         type: 3}
       propertyPath: m_Name
@@ -789,6 +795,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: StatusWidget
+      objectReference: {fileID: 0}
+    - target: {fileID: 7444367442967460067, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7444367442967460067, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7444367442967460067, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7444367442967460067, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8362058129232229509, guid: 900a502f43b9ba645a989b83c1e988be,
         type: 3}
@@ -845,7 +871,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1297043025550356410, guid: 900a502f43b9ba645a989b83c1e988be, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 900a502f43b9ba645a989b83c1e988be, type: 3}
 --- !u!1 &1528180831
 GameObject:

@@ -14,7 +14,6 @@ namespace RoguelikeGame
     public class PlayerState : MonoBehaviour
     {
         [SerializeField] float m_attackInterval = 0.5f;
-        
 
         StateMachine m_playerState;
         PlayerCharacter m_pc;
@@ -23,6 +22,7 @@ namespace RoguelikeGame
         Weapon m_weapon;
         StatusWidget m_statusWidget;
         ParticleSystem[] m_effects;
+        SkillCaster[] m_skillTree;
 
         bool m_bStartAttack = false;
         float m_attackTime = 1.0f;
@@ -41,6 +41,7 @@ namespace RoguelikeGame
             m_pc.PlayerState = m_playerState;
 
             SetHitEffect();
+            SetSkillTree();
         }
 
         void Start()
@@ -64,7 +65,7 @@ namespace RoguelikeGame
                     }
                 case (int)GSDefine.PlayerState.CASTSPELL:
                     {
-                        // 技能施放
+                        // 技能詠唱
                         if (m_playerState.IsEntering())
                         {
                             Debug.Log("CASTSPELL");
@@ -130,7 +131,6 @@ namespace RoguelikeGame
 
         private void AttackCombat()
         {
-
             m_combatTime = m_attackInterval;
 
             switch (m_attackCount)
@@ -243,6 +243,24 @@ namespace RoguelikeGame
                 return true;
             }
             return false;
+        }
+
+        // 設定技能樹
+        private void SetSkillTree()
+        {
+            m_skillTree = new SkillCaster[5];
+            m_skillTree[0] = Resources.Load<AssetLoader>("AssetLoader").GetSkillCaster((int)GSDefine.SkillType.SPELL_1);
+        }
+
+        // 技能施放
+        public void CastSpellImplement(int type)
+        {
+            SkillCaster spell = Instantiate(m_skillTree[type]);
+            float castRange = transform.localScale.x * spell.SpellRange;
+            Vector3 position = new Vector3(transform.position.x + spell.transform.position.x * castRange, transform.position.y, transform.position.z);
+            spell.transform.position = position;
+            spell.CastSpell(1.0f);
+ 
         }
     }
 }

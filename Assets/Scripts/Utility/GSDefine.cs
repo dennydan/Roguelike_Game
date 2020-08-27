@@ -22,4 +22,9 @@ public class GSDefine : MonoBehaviour
         Hit_POOF = 0,
         HIT_VIRUS
     }
+
+    public enum SkillType
+    {
+        SPELL_1 = 0
+    }
 }

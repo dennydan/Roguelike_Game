@@ -39,6 +39,7 @@ namespace RoguelikeGame
                     Monster npc = hit.GetComponent<Monster>();
                     if (isAttacked && npc)
                     {
+                        // 單體攻擊，擊中目標上鎖
                         target = hit.transform;
                         isAttacked = false;
                         TakeDemage(npc, demageFactor);

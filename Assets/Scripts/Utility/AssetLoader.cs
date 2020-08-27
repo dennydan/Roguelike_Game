@@ -7,15 +7,21 @@ using UnityEngine;
 // 2020/08/22 create by dennyliu
 public class AssetLoader : MonoBehaviour
 {
-    [SerializeField] ParticleSystem[] hitParticles;
+    [SerializeField] ParticleSystem[] m_hitParticles;
+    [SerializeField] SkillCaster[] m_skillCasters;
 
     public ParticleSystem GetHitParticle(int index)
     {
-        if (index >= hitParticles.Length)
+        if (index >= m_hitParticles.Length)
             return null;
         else
         {
-            return hitParticles[index];
+            return m_hitParticles[index];
         }
+    }
+
+    public SkillCaster GetSkillCaster(int type)
+    {
+        return m_skillCasters[type];
     }
 }
