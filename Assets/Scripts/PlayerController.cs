@@ -4,13 +4,12 @@
  * 已知BUG:
  *  1.牆壁不算落地，只是不能跳躍，一樣會卡住
  *  2.低高度浮空可跳躍
- *  3.人物怪物轉向 血條也轉向
- *  4.怪物傷害速度過快
+ *  3.怪物傷害速度過快
  *  
  *  2020/08/15
  *  目前遊戲內尺寸測量: 
     1.跳躍高度約2格高
-    2.跳躍長度約3格遠
+    2.跳躍長度約2格多一點
     3.走路速度約3格/s
     TODO: 世界標準、變數名稱規則
     TODO: 迴避無敵(等生命值)、納入技能系統
@@ -27,7 +26,7 @@ namespace RoguelikeGame
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] float speed = 150f;
-        [SerializeField] float jumpForce = 320f;
+        [SerializeField] float jumpForce = 15f;
         [SerializeField] LayerMask Ground_Layer;
         [SerializeField] string groundCheckName = "GroundCheck";
         [SerializeField] string ceilingCheckName = "CeilingCheck";
@@ -35,6 +34,10 @@ namespace RoguelikeGame
         [SerializeField] float dodgeFactor = 2f;
         [SerializeField] float dodgeCD = 1f;
         [SerializeField] float dodgeDuration = 0.3f;
+        [SerializeField] float gravity = -1.25f;
+        [SerializeField] float gravityFactor = 10f;
+        [SerializeField] float MAX_JUMP_TIME = 0.1f;
+
 
         Transform m_plaerStateHUD;
         PlayerCharacter m_pc;
@@ -51,6 +54,8 @@ namespace RoguelikeGame
         float m_speedFactor = 0f;
         float dodgeCount = 0f;
         bool dodging = false;
+        bool jumpingUp = false;
+        float jumpCount = 0f;
 
         private void Awake()
         {
@@ -80,6 +85,8 @@ namespace RoguelikeGame
             {
                 m_pc.PlayerState.NextState((int)GSDefine.PlayerState.ATTACK);
             }
+
+            if (Input.GetButtonUp("Jump")) jumpingUp = false;
         }
 
         private void FixedUpdate()
@@ -125,12 +132,33 @@ namespace RoguelikeGame
             m_characterAnim.SetFloat("Speed", moveSpeed);
 
             //Jump, 接動畫(跳躍)
-            //TODO:跳躍力道 按住跳更高 放開則停止跳躍(按住持續給力 隨時間給越少 放開則不給力)
+            //TODO:
+            //BUG: 下落太快會卡進地板 (限制下落速度/寫出移動碰撞判定)
+            //1.擬真跳躍(7 days、麥塊): 按下瞬間向上力, 未著陸時持續給予向下力
+            //  優點: 較為現實
+            //  缺點: 過於現實、由於無法調整高度，操作感、遊玩樂趣下降
+            //2.蟲蟲跳躍(目前、哈囉奈): 按下時持續給力 隨時間給越少 放開給予向下力
+            //  優點: 適合操作精膩的遊戲、此類遊戲常用
+            //  缺點: 畫面產生不現實、不合理
+            if (jumpCount < MAX_JUMP_TIME && jumpingUp) jumpCount += Time.fixedDeltaTime;    //冷卻判斷計時
+            else
+            {
+                jumpCount = 0;
+                jumpingUp = false;
+            }
             if (m_isGrounded && jump)
             {
+                gravityFactor = 0;
                 m_isGrounded = false;
+                jumpingUp = true;
                 m_characterAnim.SetBool("Ground", m_isGrounded);
-                characterRigidBody.AddForce(new Vector2(0f, jumpForce));
+            }
+
+            if (!m_isGrounded && jumpingUp) characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, jumpForce);
+            else if (!m_isGrounded && !jumpingUp)
+            {
+                if (characterRigidBody.velocity.y > 8f) characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, 8f);
+                characterRigidBody.AddForce(new Vector2(0, gravity * gravityFactor++));
             }
         }
 

@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06398ca975c2be044bfdc4d3d4ea413b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_maxHealth: 50000
+  m_maxHealth: 60000
   m_maxSpeed: 300
   m_gs: {fileID: 0}
 --- !u!114 &8386281000729059001
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 150
-  jumpForce: 320
+  jumpForce: 15
   Ground_Layer:
     serializedVersion: 2
     m_Bits: 311
@@ -83,6 +83,9 @@ MonoBehaviour:
   dodgeFactor: 2
   dodgeCD: 1
   dodgeDuration: 0.3
+  gravity: -1.25
+  gravityFactor: 10
+  MAX_JUMP_TIME: 0.1
 --- !u!114 &451972260243102973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37c3d1be573344cbbe29c4bdcc83c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_attackInterval: 0.5
+  m_attackInterval: 0.6
 --- !u!50 &2176955952676380701
 Rigidbody2D:
   serializedVersion: 4

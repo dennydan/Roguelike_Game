@@ -759,23 +759,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 451972260243102973, guid: 900a502f43b9ba645a989b83c1e988be,
-        type: 3}
-      propertyPath: m_attackEffect
-      value: 
-      objectReference: {fileID: 19800000, guid: 3156817f64ec68948ad6bb26569b9ef5,
-        type: 3}
-    - target: {fileID: 451972260243102973, guid: 900a502f43b9ba645a989b83c1e988be,
-        type: 3}
-      propertyPath: m_attackInterval
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 451972260243102973, guid: 900a502f43b9ba645a989b83c1e988be,
-        type: 3}
-      propertyPath: m_spellTest
-      value: 
-      objectReference: {fileID: 5501529833156743209, guid: e5578f699a8652f48bfdf5357ac8f1fc,
-        type: 3}
     - target: {fileID: 497569062728642712, guid: 900a502f43b9ba645a989b83c1e988be,
         type: 3}
       propertyPath: m_Name
@@ -783,19 +766,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2027946123617353371, guid: 900a502f43b9ba645a989b83c1e988be,
         type: 3}
-      propertyPath: m_maxHealth
-      value: 60000
-      objectReference: {fileID: 0}
-    - target: {fileID: 2027946123617353371, guid: 900a502f43b9ba645a989b83c1e988be,
-        type: 3}
       propertyPath: m_gs
       value: 
       objectReference: {fileID: 205649338}
-    - target: {fileID: 3020552173321032722, guid: 900a502f43b9ba645a989b83c1e988be,
-        type: 3}
-      propertyPath: m_Name
-      value: StatusWidget
-      objectReference: {fileID: 0}
     - target: {fileID: 7444367442967460067, guid: 900a502f43b9ba645a989b83c1e988be,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -871,8 +844,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1297043025550356410, guid: 900a502f43b9ba645a989b83c1e988be, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 900a502f43b9ba645a989b83c1e988be, type: 3}
 --- !u!1 &1528180831
 GameObject:
