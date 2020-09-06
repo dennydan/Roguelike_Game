@@ -21,12 +21,14 @@ namespace RoguelikeGame
         Monster m_npc = null;
         Weapon m_weapon;
         StatusWidget m_statusWidget;
+        ActionBar m_actionBar;
         ParticleSystem[] m_effects;
         SkillCaster[] m_skillTree;
 
         bool m_bStartAttack = false;
         float m_attackTime = 1.0f;
         float m_combatTime = 1.0f;
+        float[] m_skillsColdTime;
         int m_attackCount = 0;
         int m_hitEffectsAmount = 2;
         Vector3 m_hitOffset = new Vector3(0, 0.5f, 0);
@@ -35,17 +37,19 @@ namespace RoguelikeGame
         {
             m_pc = GetComponent<PlayerCharacter>();
             m_statusWidget = GetComponentInChildren<StatusWidget>();
+            m_actionBar = GetComponentInChildren<ActionBar>();
             m_characterAnim = GetComponent<Animator>();
             m_weapon =  GetComponentInChildren<Weapon>();
             m_playerState = new StateMachine((int)GSDefine.PlayerState.IDLE);
             m_pc.PlayerState = m_playerState;
-
+            m_skillsColdTime = new float[5];
             SetHitEffect();
             SetSkillTree();
         }
 
         void Start()
         {
+            
         }
 
         void Update()
@@ -120,12 +124,13 @@ namespace RoguelikeGame
                     break;
 
             }
-
+            UpdateStatus();
+            ColdDown();
         }
 
         private void FixedUpdate()
         {
-            UpdateStatus();
+            
         }
 
 
@@ -255,12 +260,29 @@ namespace RoguelikeGame
         // 技能施放
         public void CastSpellImplement(int type)
         {
+            if (m_skillsColdTime[type] > 0)
+                return;
+            
             SkillCaster spell = Instantiate(m_skillTree[type]);
             float castRange = transform.localScale.x * spell.SpellRange;
             Vector3 position = new Vector3(transform.position.x + spell.transform.position.x * castRange, transform.position.y, transform.position.z);
             spell.transform.position = position;
             spell.CastSpell(1.0f);
- 
+            m_skillsColdTime[type] = spell.ColdDown;
+            m_actionBar.SetSkillsColdTime(type, spell.ColdDown);
+        }
+
+        // CD 需調整效能
+        private void ColdDown()
+        {
+            for(int index = 0; index < m_skillsColdTime.Length; index++)
+            {
+                if(m_skillsColdTime[index] > 0)
+                {
+                    m_skillsColdTime[index] -= Time.deltaTime;
+                    m_actionBar.UpdateSkillState(index, m_skillsColdTime[index]);
+                }
+            }
         }
     }
 }

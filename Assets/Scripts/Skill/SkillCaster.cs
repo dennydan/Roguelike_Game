@@ -18,12 +18,13 @@ public class SkillCaster : MonoBehaviour
 {
     [SerializeField] float m_demage = 5;
     [SerializeField] float m_rang = 1.0f;
+    [SerializeField] float m_coldTime = 5.0f;
     [SerializeField] int m_effectIndex = 1;     // GSDefine.AttackEffect
     float m_maintainTime = 3.0f;
     float m_spellSpeed = 1.0f;
     public float SpellSpeed { get { return m_spellSpeed; } }
     public float SpellRange { get { return m_rang; } }
-
+    public float ColdDown { get { return m_coldTime; } }
     ParticleSystem m_skillEffect;
     void Awake()
     {
