@@ -620,6 +620,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1206473226 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6271685149331099027, guid: 900a502f43b9ba645a989b83c1e988be,
+    type: 3}
+  m_PrefabInstance: {fileID: 1416356321}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1406149847
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +765,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 193255477155937667, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 451972260243102973, guid: 900a502f43b9ba645a989b83c1e988be,
         type: 3}
       propertyPath: m_attackEffect
@@ -795,6 +806,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: StatusWidget
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703538768972084696, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_skillBtns.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703538768972084696, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_skillBtns.Array.data[0]
+      value: 
+      objectReference: {fileID: 1206473226}
+    - target: {fileID: 6271685149331099027, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_Name
+      value: Skill_1
       objectReference: {fileID: 0}
     - target: {fileID: 7444367442967460067, guid: 900a502f43b9ba645a989b83c1e988be,
         type: 3}
@@ -870,6 +896,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8994701987077559142, guid: 900a502f43b9ba645a989b83c1e988be,
+        type: 3}
+      propertyPath: m_Name
+      value: Skills
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1297043025550356410, guid: 900a502f43b9ba645a989b83c1e988be, type: 3}
