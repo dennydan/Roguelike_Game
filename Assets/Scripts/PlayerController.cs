@@ -126,7 +126,7 @@ namespace RoguelikeGame
             //TODO:是否能合成一行?  moveSpeed * maxSpeed * dodgeFactor * dodging
             //TODO: 牆壁不算落地，只是不能跳躍，一樣會卡住
             if (dodging) characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
-            else        characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
+            else         characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
 
             moveSpeed = Mathf.Abs(moveSpeed);
             m_characterAnim.SetFloat("Speed", moveSpeed);
