@@ -5,16 +5,19 @@
  *  1.牆壁不算落地，只是不能跳躍，一樣會卡住
  *  2.低高度浮空可跳躍
  *  3.怪物傷害速度過快
+ *  4.站在邊緣會被視為離地導致無法移動
+ *  5.人物大小、地形與移動跳躍
  *  
- *  2020/08/15
+ *  2020/09/28
  *  目前遊戲內尺寸測量: 
-    1.跳躍高度約2格高
-    2.跳躍長度約2格多一點
-    3.走路速度約3格/s
-    TODO: 世界標準、變數名稱規則
+    1.跳躍高度約2.5格高
+    2.跳躍長度約5.5格
+    3.走路速度約5.5格/s
+    TODO: 變數名稱規則
     TODO: 迴避無敵(等生命值)、納入技能系統
-    TODO: 地形如何重設為標準? 地板跟牆壁如何區分?
-    TODO: 通一生物Entity控制器
+    TODO: Ground_1x1如何重設為標準?
+    TODO: 統一生物Entity控制器
+    TODO: 角色動畫
 
     +閃避納入狀態機
  *  
@@ -25,7 +28,7 @@ namespace RoguelikeGame
     [RequireComponent(typeof(PlayerCharacter))]
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] float speed = 150f;
+        [SerializeField] float speed = 200f;
         [SerializeField] float jumpForce = 15f;
         [SerializeField] LayerMask Ground_Layer;
         [SerializeField] string groundCheckName = "GroundCheck";
@@ -125,6 +128,7 @@ namespace RoguelikeGame
 
             //TODO:是否能合成一行?  moveSpeed * maxSpeed * dodgeFactor * dodging
             //TODO: 牆壁不算落地，只是不能跳躍，一樣會卡住
+            //TODO: 迴避時跳躍再落地可否迴避?
             if (dodging) characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
             else         characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
 
@@ -133,7 +137,8 @@ namespace RoguelikeGame
 
             //Jump, 接動畫(跳躍)
             //TODO:
-            //BUG: 下落太快會卡進地板 (限制下落速度/寫出移動碰撞判定)
+            //已知BUG: 下落太快會卡進地板 (限制下落速度/寫出移動碰撞判定)
+            //已知BUG: 人物大小、地形與移動跳躍
             //1.擬真跳躍(7 days、麥塊): 按下瞬間向上力, 未著陸時持續給予向下力
             //  優點: 較為現實
             //  缺點: 過於現實、由於無法調整高度，操作感、遊玩樂趣下降
@@ -162,7 +167,7 @@ namespace RoguelikeGame
             }
         }
 
-        //TODO: 低高度浮空可跳躍
+        //已知BUG: 低高度浮空可跳躍、站在邊緣會被視為離地導致無法移動
         void Set_isGrounded()
         {
             m_isGrounded = false;
@@ -178,7 +183,6 @@ namespace RoguelikeGame
             m_characterAnim.SetBool("Ground", m_isGrounded);
         }
 
-        //TODO: 人物怪物轉向 血條也轉向
         void Flip()
         {
             m_bFacingRight = !m_bFacingRight;
