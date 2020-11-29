@@ -1,23 +1,26 @@
-﻿using UnityEngine;
+﻿using UnityEditor.UIElements;
+using UnityEngine;
 
 /*
  * 已知BUG:
  *  1.牆壁不算落地，只是不能跳躍，一樣會卡住
  *  2.低高度浮空可跳躍
  *  3.怪物傷害速度過快
- *  4.站在邊緣會被視為離地導致無法移動
+ *  4.站在邊緣會被視為離地導致無法移動  判斷離地會開始下落 但碰撞箱與判斷範圍不符
  *  5.人物大小、地形與移動跳躍
  *  
  *  2020/09/28
  *  目前遊戲內尺寸測量: 
-    1.跳躍高度約2.5格高
-    2.跳躍長度約5.5格
-    3.走路速度約5.5格/s
+    1.跳躍高度約2.5格高   JumpForce, MAX_JUMP_TIME, Gravity=(15, 0.1, -1.25)
+    2.跳躍長度約3格
+    3.走路速度約3格/s   speed=150
+    4.迴避距離約8格     dodgeFactor=5
     TODO: 變數名稱規則
     TODO: 迴避無敵(等生命值)、納入技能系統
     TODO: Ground_1x1如何重設為標準?
     TODO: 統一生物Entity控制器
     TODO: 角色動畫
+    TODO: 如何增加碰撞Layer?
 
     +閃避納入狀態機
  *  
@@ -28,18 +31,21 @@ namespace RoguelikeGame
     [RequireComponent(typeof(PlayerCharacter))]
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] float speed = 200f;
-        [SerializeField] float jumpForce = 15f;
+        [SerializeField] float speed = 150f;
+        [SerializeField] float jumpForce = 10f;
         [SerializeField] LayerMask Ground_Layer;
         [SerializeField] string groundCheckName = "GroundCheck";
         [SerializeField] string ceilingCheckName = "CeilingCheck";
         [SerializeField] Transform centerOfMass;
-        [SerializeField] float dodgeFactor = 2f;
+        [SerializeField] float dodgeFactor = 5f;
         [SerializeField] float dodgeCD = 1f;
         [SerializeField] float dodgeDuration = 0.3f;
         [SerializeField] float gravity = -1.25f;
         [SerializeField] float gravityFactor = 10f;
-        [SerializeField] float MAX_JUMP_TIME = 0.1f;
+        [SerializeField] float MAX_JUMP_TIME = 0.5f;
+        [SerializeField] float DEFAULT_RIGID_GRAVITY = 4f;
+        [SerializeField] float minSpeedX = -40f, maxSpeedX = 40f;
+        [SerializeField] float minSpeedY = -40f, maxSpeedY = 40f;
 
 
         Transform m_plaerStateHUD;
@@ -59,6 +65,10 @@ namespace RoguelikeGame
         bool dodging = false;
         bool jumpingUp = false;
         float jumpCount = 0f;
+        BoxCollider2D characterBoxCollider;
+        float jumpForce_tmp;
+        float FallingSpeed =0f;
+        float speedX, speedY;
 
         private void Awake()
         {
@@ -69,6 +79,8 @@ namespace RoguelikeGame
             characterRigidBody.centerOfMass = centerOfMass.position;
             m_pc = GetComponent<PlayerCharacter>();
             m_plaerStateHUD = transform.Find("StatusWidget");
+            characterBoxCollider = GetComponent<BoxCollider2D>();
+            jumpForce_tmp = jumpForce;
         }
 
         private void Update()
@@ -112,6 +124,7 @@ namespace RoguelikeGame
             //..
 
             //Dodge, 接動畫(迴避)
+            //TODO: 根據當前面向迴避
             if (dodgeCount < dodgeCD) dodgeCount += Time.fixedDeltaTime;    //冷卻判斷計時
             if (dodgeCount >= dodgeDuration) dodging = false;    //無敵(類似Buff)判斷
             if (m_isGrounded && dodge && dodgeCount >= dodgeCD)     //迴避判斷
@@ -119,24 +132,45 @@ namespace RoguelikeGame
                 dodgeCount = 0;
                 dodging = true;
             }
-
+            if(dodging)
+            {
+                //TODO: 如何變更碰撞Layer? 與碰撞回彈扣血狀況類似
+                //characterBoxCollider.
+            }
+            //迴避中欲變更方向
+            if (dodging)
+            {
+                if ((!m_bFacingRight && Input.GetKey(KeyCode.RightArrow)) || (m_bFacingRight && Input.GetKey(KeyCode.LeftArrow)))
+                {
+                    dodgeCount = dodgeCD;
+                    dodging = false;
+                }
+            }
             //人物轉向
-            if (moveSpeed > 0 && !m_bFacingRight)
-                Flip();
-            else if (moveSpeed < 0 && m_bFacingRight)
+            if ((moveSpeed > 0 && !m_bFacingRight) || (moveSpeed < 0 && m_bFacingRight))
                 Flip();
 
-            //TODO:是否能合成一行?  moveSpeed * maxSpeed * dodgeFactor * dodging
+            //位移判斷
+            //TODO:是否能合成一行?  moveSpeed * maxSpeed * dodgeFactor * dodging (false == 0?)
             //TODO: 牆壁不算落地，只是不能跳躍，一樣會卡住
-            //TODO: 迴避時跳躍再落地可否迴避?
-            if (dodging) characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
-            else         characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
+            if (dodging)
+            {
+                characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
+                Debug.Log("speed: " + moveSpeed * speed * dodgeFactor);
+                if(m_isGrounded && jump)    //跳躍取消
+                {
+                    dodgeCount = dodgeCD;
+                    dodging = false;
+                }
+            }
+            else characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
 
             moveSpeed = Mathf.Abs(moveSpeed);
             m_characterAnim.SetFloat("Speed", moveSpeed);
+            
 
-            //Jump, 接動畫(跳躍)
-            //TODO:
+            //跳躍判斷, 接動畫(跳躍)
+            //TODO: 需考慮跳躍與迴避組合狀況
             //已知BUG: 下落太快會卡進地板 (限制下落速度/寫出移動碰撞判定)
             //已知BUG: 人物大小、地形與移動跳躍
             //1.擬真跳躍(7 days、麥塊): 按下瞬間向上力, 未著陸時持續給予向下力
@@ -159,12 +193,32 @@ namespace RoguelikeGame
                 m_characterAnim.SetBool("Ground", m_isGrounded);
             }
 
-            if (!m_isGrounded && jumpingUp) characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, jumpForce);
-            else if (!m_isGrounded && !jumpingUp)
+            //Y軸移動判斷
+            if(!dodging)
             {
-                if (characterRigidBody.velocity.y > 8f) characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, 8f);
-                characterRigidBody.AddForce(new Vector2(0, gravity * gravityFactor++));
+                characterRigidBody.gravityScale = 0;    //此屬性影響跳躍公式，日後應停用，蟲蟲跳需歸0否則DEFAULT_RIGID_GRAVITY，clamp、lerp、slerp函數用法、曲線?
+
+                if (!m_isGrounded && jumpingUp)
+                {
+                    //jumpForce = Mathf.Clamp(valuef, minf, maxf);
+                    //jumpForce_tmp = Mathf.Clamp(15f, 0f, 15f);
+                    characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, jumpForce_tmp);
+                    //characterRigidBody.AddForce(new Vector2(0, 150f));
+                }
+                else if (!m_isGrounded && !jumpingUp)
+                {
+                    //if (characterRigidBody.velocity.y > 8f) characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, 8f);
+                    //characterRigidBody.AddForce(new Vector2(0, gravity * gravityFactor++));
+                    FallingSpeed = Mathf.Lerp(0f, -20f ,0.3f);
+                    characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, FallingSpeed);
+                }
             }
+            else
+            {
+                characterRigidBody.gravityScale = 0;    //迴避時取消重力影響
+            }
+
+            SpeedControl();
         }
 
         //已知BUG: 低高度浮空可跳躍、站在邊緣會被視為離地導致無法移動
@@ -193,6 +247,15 @@ namespace RoguelikeGame
             Vector3 scaleHUD = m_plaerStateHUD.transform.localScale;
             scaleHUD.x *= -1;
             m_plaerStateHUD.localScale = scaleHUD;
+        }
+
+        void SpeedControl()
+        {
+            speedX = characterRigidBody.velocity.x;
+            speedY = characterRigidBody.velocity.y;
+            float newSpeedX = Mathf.Clamp(speedX, minSpeedX, maxSpeedX);
+            float newSpeedY = Mathf.Clamp(speedY, minSpeedY, maxSpeedY);
+            characterRigidBody.velocity = new Vector2(newSpeedX, newSpeedY);
         }
     }
 }

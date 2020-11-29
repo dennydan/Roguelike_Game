@@ -326,7 +326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &401526850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,7 +605,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.08, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1406149848}
@@ -1055,7 +1055,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1178461065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1717,7 +1717,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1656286034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1990,6 +1990,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 405101985215111249, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
+        type: 3}
+      propertyPath: m_GravityScale
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 405101985215111249, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
+        type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 979108696769087910, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -2014,6 +2024,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106144187763140764, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
+        type: 3}
+      propertyPath: dodgeFactor
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106144187763140764, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
+        type: 3}
+      propertyPath: speed
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106144187763140764, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
+        type: 3}
+      propertyPath: jumpForce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3106144187763140764, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
+        type: 3}
+      propertyPath: MAX_JUMP_TIME
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7283733747095443623, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
+        type: 3}
+      propertyPath: dodgeFactor
+      value: 2.75
       objectReference: {fileID: 0}
     - target: {fileID: 7312989220685738651, guid: 2b2e04ca24657ad40bf18903b8c79aa0,
         type: 3}
