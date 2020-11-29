@@ -32,7 +32,7 @@ namespace RoguelikeGame
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] float speed = 150f;
-        [SerializeField] float jumpForce = 10f;
+        float jumpForce = 10f;
         [SerializeField] LayerMask Ground_Layer;
         [SerializeField] string groundCheckName = "GroundCheck";
         [SerializeField] string ceilingCheckName = "CeilingCheck";
@@ -41,7 +41,7 @@ namespace RoguelikeGame
         float dodgeCD = 1f;
         float dodgeDuration = 0.3f;
         float gravity = -1.25f;
-        float gravityFactor = 10f;
+        float gravityFactor = -20f;
         float MAX_JUMP_TIME = 0.5f;
         float DEFAULT_RIGID_GRAVITY = 4f;
         float MAXSPEED = 60f;
@@ -63,9 +63,8 @@ namespace RoguelikeGame
         float dodgeCount = 0f;
         bool dodging = false;
         bool jumpingUp = false;
-        [SerializeField] float jumpCount = 0f;
+        float jumpCount = 0f;
         BoxCollider2D characterBoxCollider;
-        float jumpForce_tmp;
         float FallingSpeed =0f;
         float speedX, speedY;
 
@@ -79,12 +78,23 @@ namespace RoguelikeGame
             m_pc = GetComponent<PlayerCharacter>();
             m_plaerStateHUD = transform.Find("StatusWidget");
             characterBoxCollider = GetComponent<BoxCollider2D>();
-            jumpForce_tmp = jumpForce;
         }
 
         private void Update()
         {
-            m_speedFactor = Mathf.Lerp(0f, speed, 0.01f) * Time.fixedDeltaTime;
+        }
+
+        private void FixedUpdate()
+        {
+            Set_isGrounded();
+            m_speedFactor = Mathf.Lerp(0f, speed, 0.01f); //* Time.fixedDeltaTime;
+            CharacterAction();
+
+            if (Input.GetButtonUp("Jump")) jumpingUp = false;
+        }
+
+        private void LateUpdate()
+        {
             if (Input.GetButtonDown("Dodge"))
             {
                 m_pc.PlayerState.NextState((int)GSDefine.PlayerState.DODGE);
@@ -95,18 +105,10 @@ namespace RoguelikeGame
                 m_pc.PlayerState.NextState((int)GSDefine.PlayerState.JUMP);
                 m_bJump = true;
             }
-            else if(Input.GetMouseButtonDown(0) && m_pc.CanAttack())
+            else if (Input.GetMouseButtonDown(0) && m_pc.CanAttack())
             {
                 m_pc.PlayerState.NextState((int)GSDefine.PlayerState.ATTACK);
             }
-
-            if (Input.GetButtonUp("Jump")) jumpingUp = false;
-        }
-
-        private void FixedUpdate()
-        {
-            Set_isGrounded();
-            CharacterAction();
         }
 
         void CharacterAction()
@@ -141,7 +143,6 @@ namespace RoguelikeGame
             {
                 if ((!m_bFacingRight && Input.GetKey(KeyCode.RightArrow)) || (m_bFacingRight && Input.GetKey(KeyCode.LeftArrow)))
                 {
-                    dodgeCount = dodgeCD;
                     dodging = false;
                 }
             }
@@ -156,11 +157,7 @@ namespace RoguelikeGame
             {
                 characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
                 //Debug.Log("speed: " + moveSpeed * speed * dodgeFactor);
-                if(m_isGrounded && jump)    //跳躍取消
-                {
-                    dodgeCount = dodgeCD;
-                    dodging = false;
-                }
+                if(m_isGrounded && jump) dodging = false;   //跳躍取消
             }
             else characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
 
@@ -178,7 +175,7 @@ namespace RoguelikeGame
             //2.蟲蟲跳躍(目前、哈囉奈): 按下時持續給力 隨時間給越少 放開給予向下力
             //  優點: 適合操作精膩的遊戲、此類遊戲常用
             //  缺點: 畫面產生不現實、不合理
-            if (jumpCount < MAX_JUMP_TIME && jumpingUp) jumpCount += Time.fixedDeltaTime;    //冷卻判斷計時
+            if (jumpCount < MAX_JUMP_TIME && jumpingUp) jumpCount += Time.fixedDeltaTime;    //跳高計時
             else
             {
                 jumpCount = 0;
@@ -186,7 +183,6 @@ namespace RoguelikeGame
             }
             if (m_isGrounded && jump)
             {
-                gravityFactor = 0;
                 m_isGrounded = false;
                 jumpingUp = true;
             }
@@ -194,26 +190,20 @@ namespace RoguelikeGame
             //Y軸移動判斷
             if(!dodging)
             {
-                characterRigidBody.gravityScale = 0;    //此屬性影響跳躍公式，日後應停用，蟲蟲跳需歸0否則DEFAULT_RIGID_GRAVITY，clamp、lerp、slerp函數用法、曲線?
-
                 if (!m_isGrounded && jumpingUp)
                 {
-                    //jumpForce = Mathf.Clamp(valuef, minf, maxf);
-                    //jumpForce_tmp = Mathf.Clamp(15f, 0f, 15f);
-                    characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, jumpForce_tmp);
-                    //characterRigidBody.AddForce(new Vector2(0, 150f));
+                    Debug.Log("jumpingUp");
+                    characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, jumpForce);
                 }
                 else if (!m_isGrounded && !jumpingUp)
                 {
-                    //if (characterRigidBody.velocity.y > 8f) characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, 8f);
-                    //characterRigidBody.AddForce(new Vector2(0, gravity * gravityFactor++));
-                    FallingSpeed = Mathf.Lerp(0f, -20f ,0.3f);
-                    characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, FallingSpeed);
+                    Debug.Log("jumpingDown");
+                    characterRigidBody.AddForce(new Vector2(0f, gravityFactor));
                 }
             }
             else
             {
-                characterRigidBody.gravityScale = 0;    //迴避時取消重力影響
+                characterRigidBody.velocity = new Vector2(characterRigidBody.velocity.x, 0f);
             }
 
             SpeedControl();
