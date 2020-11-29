@@ -37,15 +37,14 @@ namespace RoguelikeGame
         [SerializeField] string groundCheckName = "GroundCheck";
         [SerializeField] string ceilingCheckName = "CeilingCheck";
         [SerializeField] Transform centerOfMass;
-        [SerializeField] float dodgeFactor = 5f;
-        [SerializeField] float dodgeCD = 1f;
-        [SerializeField] float dodgeDuration = 0.3f;
-        [SerializeField] float gravity = -1.25f;
-        [SerializeField] float gravityFactor = 10f;
-        [SerializeField] float MAX_JUMP_TIME = 0.5f;
-        [SerializeField] float DEFAULT_RIGID_GRAVITY = 4f;
-        [SerializeField] float minSpeedX = -40f, maxSpeedX = 40f;
-        [SerializeField] float minSpeedY = -40f, maxSpeedY = 40f;
+        float dodgeFactor = 5f;
+        float dodgeCD = 1f;
+        float dodgeDuration = 0.3f;
+        float gravity = -1.25f;
+        float gravityFactor = 10f;
+        float MAX_JUMP_TIME = 0.5f;
+        float DEFAULT_RIGID_GRAVITY = 4f;
+        float MAXSPEED = 60f;
 
 
         Transform m_plaerStateHUD;
@@ -64,7 +63,7 @@ namespace RoguelikeGame
         float dodgeCount = 0f;
         bool dodging = false;
         bool jumpingUp = false;
-        float jumpCount = 0f;
+        [SerializeField] float jumpCount = 0f;
         BoxCollider2D characterBoxCollider;
         float jumpForce_tmp;
         float FallingSpeed =0f;
@@ -156,7 +155,7 @@ namespace RoguelikeGame
             if (dodging)
             {
                 characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
-                Debug.Log("speed: " + moveSpeed * speed * dodgeFactor);
+                //Debug.Log("speed: " + moveSpeed * speed * dodgeFactor);
                 if(m_isGrounded && jump)    //跳躍取消
                 {
                     dodgeCount = dodgeCD;
@@ -190,7 +189,6 @@ namespace RoguelikeGame
                 gravityFactor = 0;
                 m_isGrounded = false;
                 jumpingUp = true;
-                m_characterAnim.SetBool("Ground", m_isGrounded);
             }
 
             //Y軸移動判斷
@@ -253,9 +251,11 @@ namespace RoguelikeGame
         {
             speedX = characterRigidBody.velocity.x;
             speedY = characterRigidBody.velocity.y;
-            float newSpeedX = Mathf.Clamp(speedX, minSpeedX, maxSpeedX);
-            float newSpeedY = Mathf.Clamp(speedY, minSpeedY, maxSpeedY);
-            characterRigidBody.velocity = new Vector2(newSpeedX, newSpeedY);
+            if (speedX > MAXSPEED) speedX = MAXSPEED;
+            if (speedY > MAXSPEED) speedY = MAXSPEED;
+            if (speedX < -MAXSPEED) speedX = -MAXSPEED;
+            if (speedY < -MAXSPEED) speedY = -MAXSPEED;
+            characterRigidBody.velocity = new Vector2(speedX, speedY);
         }
     }
 }
