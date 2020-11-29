@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace RoguelikeGame
 {
-
     public class Monster_walk : StateMachineBehaviour
     {
         [SerializeField] float moveSpeed = 1f;

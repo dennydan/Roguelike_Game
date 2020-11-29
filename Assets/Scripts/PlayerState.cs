@@ -17,6 +17,7 @@ namespace RoguelikeGame
 
         StateMachine m_playerState;
         PlayerCharacter m_pc;
+        PlayerController m_controller;
         Animator m_characterAnim;
         Monster m_npc = null;
         Weapon m_weapon;
@@ -36,6 +37,7 @@ namespace RoguelikeGame
         private void Awake()
         {
             m_pc = GetComponent<PlayerCharacter>();
+            m_controller = GetComponent<PlayerController>();
             m_statusWidget = GetComponentInChildren<StatusWidget>();
             m_actionBar = GetComponentInChildren<ActionBar>();
             m_characterAnim = GetComponent<Animator>();
@@ -81,6 +83,7 @@ namespace RoguelikeGame
                     {
                         if (m_playerState.IsEntering())
                         {
+                            Debug.Log("STATE Attack");
                             m_characterAnim.SetTrigger("Attack");
                             AttackCombat();
                         }
@@ -107,7 +110,13 @@ namespace RoguelikeGame
                     {
                         if (m_playerState.IsEntering())
                         {
-                            Debug.Log("JUMP");
+                            Debug.Log("STATE JUMP");
+                            m_controller.SetIsJumping(true);
+                        }
+                        if(Input.GetMouseButtonDown(0))
+                        {
+                            m_playerState.NextState((int)GSDefine.PlayerState.ATTACK);
+                            
                         }
                         break;
                     }
@@ -130,7 +139,7 @@ namespace RoguelikeGame
 
         private void FixedUpdate()
         {
-            
+                
         }
 
 

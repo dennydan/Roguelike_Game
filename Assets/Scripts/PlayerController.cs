@@ -257,6 +257,10 @@ namespace RoguelikeGame
             if (speedY < -MAXSPEED) speedY = -MAXSPEED;
             characterRigidBody.velocity = new Vector2(speedX, speedY);
         }
+        public void SetIsJumping(bool isJumping)
+        {
+            m_bJump = isJumping;
+        }
     }
 }
 
