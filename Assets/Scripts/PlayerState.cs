@@ -91,6 +91,10 @@ namespace RoguelikeGame
                         {
                             m_playerState.NextState((int)GSDefine.PlayerState.IDLE);
                         }
+                        else
+                        {
+
+                        }
                         break;
                     }
                 case (int)GSDefine.PlayerState.DODGE:

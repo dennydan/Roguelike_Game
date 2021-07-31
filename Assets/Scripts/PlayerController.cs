@@ -86,7 +86,7 @@ namespace RoguelikeGame
 
         private void FixedUpdate()
         {
-            Set_isGrounded();
+            SetOnTheGround();
             m_speedFactor = Mathf.Lerp(0f, speed, 0.01f); //* Time.fixedDeltaTime;
             CharacterAction();
 
@@ -109,7 +109,7 @@ namespace RoguelikeGame
             {
                 m_pc.PlayerState.NextState((int)GSDefine.PlayerState.ATTACK);
             }
-        }
+         }
 
         void CharacterAction()
         {
@@ -156,14 +156,16 @@ namespace RoguelikeGame
             if (dodging)
             {
                 characterRigidBody.velocity = new Vector2(moveSpeed * speed * dodgeFactor, characterRigidBody.velocity.y);
-                //Debug.Log("speed: " + moveSpeed * speed * dodgeFactor);
                 if(m_isGrounded && jump) dodging = false;   //跳躍取消
             }
-            else characterRigidBody.velocity = new Vector2(moveSpeed * speed, characterRigidBody.velocity.y);
+            else
+            {
+                characterRigidBody.velocity = new Vector2( moveSpeed, characterRigidBody.velocity.y );
+            }
 
             moveSpeed = Mathf.Abs(moveSpeed);
             m_characterAnim.SetFloat("Speed", moveSpeed);
-            
+            characterBoxCollider.enabled = true;
 
             //跳躍判斷, 接動畫(跳躍)
             //TODO: 需考慮跳躍與迴避組合狀況
@@ -210,7 +212,7 @@ namespace RoguelikeGame
         }
 
         //已知BUG: 低高度浮空可跳躍、站在邊緣會被視為離地導致無法移動
-        void Set_isGrounded()
+        void SetOnTheGround()
         {
             m_isGrounded = false;
 

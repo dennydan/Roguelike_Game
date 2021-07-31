@@ -12,7 +12,7 @@ public class StateMachine
         {
             m_currState = m_nextState;
             m_isTransit = false;
-            m_isEntering = true;
+            m_isEntering = true;  
         }
         else
         {
