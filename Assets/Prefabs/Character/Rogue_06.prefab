@@ -861,11 +861,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000011821036864}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06398ca975c2be044bfdc4d3d4ea413b, type: 3}
+  m_Script: {fileID: 11500000, guid: d8d97e811e98c0e4c9393ba018a2e12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_maxHealth: 60000
-  m_maxSpeed: 300
+  m_maxHealth: 5
+  m_maxSpeed: 10
   m_gs: {fileID: 0}
 --- !u!114 &4209800006537817990
 MonoBehaviour:
@@ -880,7 +880,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 150
-  jumpForce: 15
   Ground_Layer:
     serializedVersion: 2
     m_Bits: 311
@@ -888,12 +887,6 @@ MonoBehaviour:
   ceilingCheckName: CeilingCheck
   centerOfMass: {fileID: 6768026595613105428, guid: 900a502f43b9ba645a989b83c1e988be,
     type: 3}
-  dodgeFactor: 2
-  dodgeCD: 1
-  dodgeDuration: 0.3
-  gravity: -1.25
-  gravityFactor: 10
-  MAX_JUMP_TIME: 0.1
 --- !u!114 &3241907173252302673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -903,10 +896,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000011821036864}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b37c3d1be573344cbbe29c4bdcc83c6, type: 3}
+  m_Script: {fileID: 11500000, guid: f3c4675aaf279a347a5c12b402a100ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_attackInterval: 0.6
+  m_attackInterval: 0.5
 --- !u!50 &1506521662560331595
 Rigidbody2D:
   serializedVersion: 4

@@ -32,11 +32,11 @@ namespace RoguelikeGame
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] float speed = 150f;
-        float jumpForce = 10f;
         [SerializeField] LayerMask Ground_Layer;
         [SerializeField] string groundCheckName = "GroundCheck";
         [SerializeField] string ceilingCheckName = "CeilingCheck";
         [SerializeField] Transform centerOfMass;
+        float jumpForce = 10f;
         float dodgeFactor = 5f;
         float dodgeCD = 1f;
         float dodgeDuration = 0.3f;
@@ -82,19 +82,24 @@ namespace RoguelikeGame
 
         private void Update()
         {
+            CharacterAction();
         }
 
         private void FixedUpdate()
         {
             SetOnTheGround();
-            m_speedFactor = Mathf.Lerp(0f, speed, 0.01f); //* Time.fixedDeltaTime;
-            CharacterAction();
-
+            //m_speedFactor = Mathf.Lerp(0f, speed, 0.01f);   //* Time.fixedDeltaTime;
             if (Input.GetButtonUp("Jump")) jumpingUp = false;
         }
 
         private void LateUpdate()
         {
+
+        }
+
+        void CharacterAction()
+        {
+            
             if (Input.GetButtonDown("Dodge"))
             {
                 m_pc.PlayerState.NextState((int)GSDefine.PlayerState.DODGE);
@@ -109,11 +114,8 @@ namespace RoguelikeGame
             {
                 m_pc.PlayerState.NextState((int)GSDefine.PlayerState.ATTACK);
             }
-         }
-
-        void CharacterAction()
-        {
             // 左右移動
+            m_speedFactor = Mathf.Lerp(0f, speed, 0.01f);
             Move(Input.GetAxisRaw("Horizontal") * m_speedFactor, false, m_bJump, m_bDodge);
             m_bJump = false;
             m_bDodge = false;
@@ -233,7 +235,7 @@ namespace RoguelikeGame
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
-            // 血量狀態不反轉
+            // 血量狀態不反轉，未來角色頭上不會有血量條
             Vector3 scaleHUD = m_plaerStateHUD.transform.localScale;
             scaleHUD.x *= -1;
             m_plaerStateHUD.localScale = scaleHUD;
