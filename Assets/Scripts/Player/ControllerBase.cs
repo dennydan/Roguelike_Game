@@ -3,6 +3,9 @@
 /*
     Created by DennyLiu on 2021.08.07
     Base 不做動畫控制
+    繼承者須自行處理
+    1. 落地判斷
+    2. 動畫、狀態處理
 */
 
 namespace RoguelikeGame
@@ -16,7 +19,15 @@ namespace RoguelikeGame
         [SerializeField] Transform m_centerOfMass;                   // 重心
         Transform m_groundCheck;
         Transform m_ceilingCheck;
+
         float m_jumpForce = 10f;            // 跳躍力道
+        bool m_bJump = false;
+        bool m_bJumpingUp = false;
+        float m_jumpCount = 0f;         // 要reset否則跳的高度會不一定
+        float m_maxJumpTime = 2.0f;
+        float m_gravityFactor = -20f;
+        bool m_bDodge = false;
+
 
         Rigidbody2D m_charactorRigidBody;
         Vector2 m_speedVec = new Vector2(0, 0);
@@ -52,7 +63,7 @@ namespace RoguelikeGame
         // 怪物controller也應該繼承此類別，控制變數要再討論
         private void ActionImplement()
         {
-            // 閃避
+            // 閃躲
             if (Input.GetButtonDown("Dodge"))
             {
                 Dodge();
@@ -70,7 +81,16 @@ namespace RoguelikeGame
             // 左右移動
             m_speedFactor = Mathf.Lerp(0f, m_speed, 0.01f);
             Move(Input.GetAxisRaw("Horizontal") * m_speedFactor);
+            JumpingCheck(); 
+            ResetAction();
         }
+        private void ResetAction()
+        {
+            m_bJump = false;
+            m_bDodge = false;
+        }
+
+        // 移動
         protected virtual void Move(float moveSpeed)
         {
             Debug.Log("ControllerBase_Move");
@@ -79,6 +99,37 @@ namespace RoguelikeGame
             MaxSpeedCheck();
         }
 
+        // 跳躍高度判斷
+        private bool JumpingCheck()
+        {
+            if (m_jumpCount < m_maxJumpTime && m_bJumpingUp)
+            {
+                m_jumpCount += Time.fixedDeltaTime;    //跳高計時
+            }
+            else
+            {
+                m_jumpCount = 0;
+                m_bJumpingUp = false;
+            }
+            if ( m_bJump )
+            {
+                m_bJumpingUp = true;
+            }
+
+            if (m_bJumpingUp)
+            {
+                Debug.Log("jumpingUp");
+                m_charactorRigidBody.velocity = new Vector2(m_charactorRigidBody.velocity.x, m_jumpForce);
+            }
+            else if (!m_bJumpingUp)
+            {
+                Debug.Log("jumpingDown");
+                m_charactorRigidBody.AddForce(new Vector2(0f, m_gravityFactor));
+            }
+            return false;
+        }
+
+        // 最大限速
         private void MaxSpeedCheck()
         {
             float speedX = m_charactorRigidBody.velocity.x > m_maxSpeed ? m_maxSpeed : m_charactorRigidBody.velocity.x;
@@ -88,15 +139,20 @@ namespace RoguelikeGame
             m_charactorRigidBody.velocity = new Vector2(speedX, speedY);
         }
 
+        //跳躍
         protected virtual void Jump()
         {
             Debug.Log("ControllerBase_Jump");
+            m_bJump = true;
         }
+
+        // 閃躲
         protected virtual void Dodge()
         {
             Debug.Log("ControllerBase_Dodge");
         }
 
+        // 攻擊
         protected virtual void Attack()
         {
             Debug.Log("ControllerBase_Attack");
@@ -113,6 +169,7 @@ namespace RoguelikeGame
                 transform.localScale = scale;
             }
         }
+
     }
 
 
