@@ -7,18 +7,28 @@ using UnityEngine;
  */
 namespace RoguelikeGame
 {
+    [RequireComponent(typeof(PlayerCharacter))]
     public class PlayerController_ : ControllerBase
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-            
-        }
-    
-        // Update is called once per frame
-        void Update()
-        {
+        PlayerCharacter m_playerCharacter;
 
+
+        protected new void Awake()
+        {
+            base.Awake();
+            Debug.Log("PlayerController_ Awake");
+            m_playerCharacter = GetComponent<PlayerCharacter>();
+        }
+
+        protected new void Update()
+        {
+            base.Update();
+
+        }
+
+        protected new void FixedUpdate()
+        {
+            base.FixedUpdate();
         }
 
         protected override void Move(float moveSpeed)
